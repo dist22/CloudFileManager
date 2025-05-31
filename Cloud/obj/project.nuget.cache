@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "VYTR/0E+pAr6Qh1wY+raBxWKOr7F9ooBHx3LVjiHWBfJ6d6qzpt0Hp1AD0pI1keozrOF7ehZ19VhHmr/2Q+FJA==",
+  "dgSpecHash": "b1n4YPNVH1j9OKl7XT4+x9hk0my0VZ0PGUdb6Xxxqxl5RC7HOpKUgD8mx4UC/za+4LgnPdmOR40+G3p4DapDag==",
   "success": true,
   "projectFilePath": "D:\\C#\\Cloud\\Cloud\\Cloud.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Di_St\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Di_St\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.1\\microsoft.aspnetcore.authentication.jwtbearer.8.0.1.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.0\\microsoft.aspnetcore.openapi.8.0.0.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\microsoft.bcl.cryptography\\8.0.0\\microsoft.bcl.cryptography.8.0.0.nupkg.sha512",

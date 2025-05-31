@@ -1,4 +1,6 @@
 using Cloud.Data;
+using Cloud.Interfaces;
+using Cloud.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContextEF>(options =>{
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
 });
+
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 
 var app = builder.Build();
 

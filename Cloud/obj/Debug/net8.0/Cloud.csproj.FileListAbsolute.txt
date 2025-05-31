@@ -173,3 +173,6 @@ D:\C#\Cloud\Cloud\obj\Debug\net8.0\refint\Cloud.dll
 D:\C#\Cloud\Cloud\obj\Debug\net8.0\Cloud.pdb
 D:\C#\Cloud\Cloud\obj\Debug\net8.0\Cloud.genruntimeconfig.cache
 D:\C#\Cloud\Cloud\obj\Debug\net8.0\ref\Cloud.dll
+D:\C#\Cloud\Cloud\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\C#\Cloud\Cloud\obj\Debug\net8.0\Cloud.sourcelink.json
+D:\C#\Cloud\Cloud\bin\Debug\net8.0\AutoMapper.dll
