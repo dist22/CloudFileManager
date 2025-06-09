@@ -14,6 +14,9 @@ public class ApplicationProfile : Profile
 
         CreateMap<UserForCreate, User>();
         CreateMap<User, UserForCreate>();
-        
+
+        CreateMap<User, UserForEdit>();
+        CreateMap<UserForEdit, User>();
+
     }
 }

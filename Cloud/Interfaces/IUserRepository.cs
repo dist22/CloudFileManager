@@ -11,4 +11,6 @@ public interface IUserRepository
     public Task<bool> GetUserByUserName(string userName);
     public Task<IEnumerable<User>> GetListOfUsers();
     public Task<User> GetUserById(int id);
+    public Task EditUser(User user, UserForEdit userForEdit);
+    public Task DeleteUser(User user);
 }

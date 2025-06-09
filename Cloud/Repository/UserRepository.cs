@@ -75,5 +75,23 @@ public class UserRepository : IUserRepository
             throw new Exception("Error");
     }
 
+    public async Task EditUser(User user, UserForEdit userForEdit)
+    {
+        user.username = userForEdit.username;
+        user.email = userForEdit.email;
+        user.role = userForEdit.role;
+        user.updateAt = DateTime.Now;
+        _entity.Users.Update(user);
+        if (!(await _entity.SaveChangesAsync() > 0))
+            throw new Exception("Error");
+    }
+
+    public async Task DeleteUser(User user)
+    {
+        _entity.Users.Remove(user);
+        if (! (await _entity.SaveChangesAsync() > 0))
+            throw new Exception("Error");
+    }
+
 
 }

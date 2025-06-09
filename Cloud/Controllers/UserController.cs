@@ -19,9 +19,6 @@ public class UserController : ControllerBase
         _mapper = mapper;
     }
 
-    #region MyRegion
-
-
     [HttpGet("GetListOfUsers")]
     public async Task<IEnumerable<User>> GetListOfUsersController()
     {
@@ -48,9 +45,22 @@ public class UserController : ControllerBase
 
         return Conflict("User with this email or username already registered");
     }
-    // [HttpPost]
-    // [HttpPut]
-    // [HttpDelete]
 
-    #endregion
+    [HttpPut("EditUser/{id}")]
+    public async Task<IActionResult> EditUserController(int id, UserForEdit userForEdit)
+    {
+        var user = await _userRepository.GetUserById(id);
+        await _userRepository.EditUser(user, userForEdit);
+        return Ok();
+    }
+
+    [HttpDelete("DeleteUser/{id}")]
+    public async Task<IActionResult> DeleteUserController(int id)
+    {
+        var user = await _userRepository.GetUserById(id);
+        await _userRepository.DeleteUser(user);
+        return Ok();
+    }
+
+
 }

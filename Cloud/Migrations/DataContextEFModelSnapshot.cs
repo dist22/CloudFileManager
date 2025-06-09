@@ -77,6 +77,9 @@ namespace Cloud.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("updateAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
