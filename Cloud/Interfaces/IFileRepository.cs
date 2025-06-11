@@ -10,4 +10,8 @@ public interface IFileRepository
     public Task<IEnumerable<FileDTOs>> GetListOfFiles();
     
     public Task<IEnumerable<FileDTOs>> GetUserFiles(int id);
+
+    public Task<bool> DeleteFile(FileRecord fileRecord);
+
+    public Task<FileRecord> GetFile(int fileId);
 }

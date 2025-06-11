@@ -3,6 +3,7 @@ using Cloud.Data;
 using Cloud.Interfaces;
 using Cloud.Models;
 using Cloud.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cloud.Repository;
@@ -26,7 +27,7 @@ public class FileRepository : IFileRepository
             .AsNoTracking()
             .Where(f => f.userId == id)
             .ToListAsync() ?? throw new Exception("Error");
-        
+
         var result = _mapper.Map<IEnumerable<FileDTOs>>(files);
         return result;
     }
@@ -61,8 +62,21 @@ public class FileRepository : IFileRepository
             throw new Exception("Error");
 
         return fileURL;
-
     }
 
+    public async Task<FileRecord> GetFile(int fileId)
+    {
+        return await _entity.Files
+            .AsNoTracking()
+            .FirstOrDefaultAsync(f => f.fileId == fileId) ?? throw new Exception("Error");
+    }
 
+    public async Task<bool> DeleteFile(FileRecord fileRecord)
+    {
+        var result = await _blobStorage.DeleteAsync(fileRecord.fileName);
+        _entity.Files.Remove(fileRecord);
+        if (!(await _entity.SaveChangesAsync() > 0))
+            throw new Exception("Error");
+        return result;
+    }
 }

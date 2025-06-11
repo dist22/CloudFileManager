@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Cloud.Data;
 using Cloud.Interfaces;
 using Cloud.DTOs;
@@ -24,56 +25,33 @@ public class UserRepository : IUserRepository
         var users = await _entity.Users
             .AsNoTracking()
             .ToListAsync();
-
-        var result = users.Select(u => new UserDTOs
-        {
-            userId = u.userId,
-            username = u.username,
-            email = u.email,
-            createAt = u.createAt,
-            role = u.role,
-            updateAt = u.updateAt
-        }).ToList();
-
-        return result;
+        return _mapper.Map<IEnumerable<UserDTOs>>(users);
     }
 
-    public async Task<User> GetUserById(int id)
+    public async Task<T> GetUserById<T>(int id)
     {
-        var user = await _entity.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.userId == id);
-        if (user != null)
-            return user;
-        throw new Exception("User with this id is not found");
-    }
+        object result = await _entity.Users
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(u => u.userId == id) ??
+                        throw new Exception("Error");
 
-    public async Task<bool> GetUserByEmail(string email)
-    {
-        User? user = await _entity.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.email == email);
-
-        if (user != null)
+        if (typeof(T) == typeof(User))
         {
-            return true;
+            return (T)result;
         }
-
-        return false;
+        else if (typeof(T) == typeof(UserDTOs))
+        {
+            return _mapper.Map<T>(result);
+        }
+        else
+            throw new NotSupportedException($"Type {typeof(T).Name} - non supported");
     }
 
-    public async Task<bool> GetUserByUserName(string userName)
+    public async Task<bool> UserExists(Expression<Func<User, bool>> predicate)
     {
-        User? user = await _entity.Users
+        return await _entity.Users
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.email == userName);
-
-        if (user != null)
-        {
-            return true;
-        }
-
-        return false;
+            .AnyAsync(predicate);
     }
 
     public async Task CreateUser(UserForCreate userForCreate)

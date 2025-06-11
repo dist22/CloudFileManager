@@ -33,5 +33,13 @@ public class FileController : ControllerBase
     {
         return await _fileRepository.UploadFile(file);
     }
-    
+
+    [HttpDelete("Delete/{id}")]
+    public async Task<IActionResult> DeleteFileController(int Id)
+    {
+        var file = await _fileRepository.GetFile(Id);
+        var result = await _fileRepository.DeleteFile(file);
+        return result ? Ok() : NotFound();
+    }
+
 }

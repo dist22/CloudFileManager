@@ -24,6 +24,12 @@ public class BlobStorage : IBlobStorage
         await blobClient.UploadAsync(stream, overwrite: true);
         return blobClient.Uri.ToString();
     }
+    
+    public async Task<bool> DeleteAsync(string fileName)
+    {
+        var blobClient = _client.GetBlobClient(fileName);
+        return await blobClient.DeleteIfExistsAsync();
+    }
 
 }
 

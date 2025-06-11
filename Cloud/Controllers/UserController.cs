@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Cloud.Models;
 using Cloud.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Cloud.DTOs;
@@ -10,13 +10,11 @@ namespace Cloud.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    private readonly IMapper _mapper;
-    
 
-    public UserController(IUserRepository userRepository, IMapper mapper)
+
+    public UserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _mapper = mapper;
     }
 
     [HttpGet("GetListOfUsers")]
@@ -28,16 +26,15 @@ public class UserController : ControllerBase
     [HttpGet("GetUserById/{id}")]
     public async Task<UserDTOs> GetUserByIdController(int id)
     {
-        var user = await _userRepository.GetUserById(id);
-        return _mapper.Map<UserDTOs>(user);
+        return await _userRepository.GetUserById<UserDTOs>(id);
     }
-    
+
 
     [HttpPost("CreateUser")]
     public async Task<IActionResult> CreateUserController(UserForCreate userForCreate)
     {
-        if (!await _userRepository.GetUserByEmail(userForCreate.email) &&
-            !await _userRepository.GetUserByUserName(userForCreate.username))
+        if (!await _userRepository.UserExists(u => u.email == userForCreate.email) &&
+            !await _userRepository.UserExists(u => u.username == userForCreate.username))
         {
             await _userRepository.CreateUser(userForCreate);
             return Ok("Successful");
@@ -49,7 +46,7 @@ public class UserController : ControllerBase
     [HttpPut("EditUser/{id}")]
     public async Task<IActionResult> EditUserController(int id, UserForEdit userForEdit)
     {
-        var user = await _userRepository.GetUserById(id);
+        var user = await _userRepository.GetUserById<User>(id);
         await _userRepository.EditUser(user, userForEdit);
         return Ok();
     }
@@ -57,7 +54,7 @@ public class UserController : ControllerBase
     [HttpDelete("DeleteUser/{id}")]
     public async Task<IActionResult> DeleteUserController(int id)
     {
-        var user = await _userRepository.GetUserById(id);
+        var user = await _userRepository.GetUserById<User>(id);
         await _userRepository.DeleteUser(user);
         return Ok();
     }
