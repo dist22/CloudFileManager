@@ -16,6 +16,8 @@ builder.Services.AddDbContext<DataContextEF>(options =>{
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IBlobStorage, BlobStorage>();
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 
 var app = builder.Build();

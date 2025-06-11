@@ -18,5 +18,8 @@ public class ApplicationProfile : Profile
         CreateMap<User, UserForEdit>();
         CreateMap<UserForEdit, User>();
 
+        CreateMap<FileRecord, FileDTOs>();
+        CreateMap<FileDTOs, FileRecord>();
+
     }
 }

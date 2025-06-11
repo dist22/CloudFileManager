@@ -19,11 +19,23 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<IEnumerable<User>> GetListOfUsers()
+    public async Task<IEnumerable<UserDTOs>> GetListOfUsers()
     {
-        return await _entity.Users
+        var users = await _entity.Users
             .AsNoTracking()
             .ToListAsync();
+
+        var result = users.Select(u => new UserDTOs
+        {
+            userId = u.userId,
+            username = u.username,
+            email = u.email,
+            createAt = u.createAt,
+            role = u.role,
+            updateAt = u.updateAt
+        }).ToList();
+
+        return result;
     }
 
     public async Task<User> GetUserById(int id)
@@ -34,7 +46,6 @@ public class UserRepository : IUserRepository
         if (user != null)
             return user;
         throw new Exception("User with this id is not found");
-
     }
 
     public async Task<bool> GetUserByEmail(string email)
@@ -47,9 +58,10 @@ public class UserRepository : IUserRepository
         {
             return true;
         }
+
         return false;
     }
-    
+
     public async Task<bool> GetUserByUserName(string userName)
     {
         User? user = await _entity.Users
@@ -60,6 +72,7 @@ public class UserRepository : IUserRepository
         {
             return true;
         }
+
         return false;
     }
 
@@ -89,9 +102,7 @@ public class UserRepository : IUserRepository
     public async Task DeleteUser(User user)
     {
         _entity.Users.Remove(user);
-        if (! (await _entity.SaveChangesAsync() > 0))
+        if (!(await _entity.SaveChangesAsync() > 0))
             throw new Exception("Error");
     }
-
-
 }

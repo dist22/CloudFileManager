@@ -2,7 +2,6 @@
 using Cloud.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Cloud.DTOs;
-using Cloud.Models;
 
 namespace Cloud.Controllers;
 
@@ -12,6 +11,7 @@ public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    
 
     public UserController(IUserRepository userRepository, IMapper mapper)
     {
@@ -20,7 +20,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("GetListOfUsers")]
-    public async Task<IEnumerable<User>> GetListOfUsersController()
+    public async Task<IEnumerable<UserDTOs>> GetListOfUsersController()
     {
         return await _userRepository.GetListOfUsers();
     }
@@ -31,8 +31,8 @@ public class UserController : ControllerBase
         var user = await _userRepository.GetUserById(id);
         return _mapper.Map<UserDTOs>(user);
     }
-
     
+
     [HttpPost("CreateUser")]
     public async Task<IActionResult> CreateUserController(UserForCreate userForCreate)
     {
@@ -61,6 +61,4 @@ public class UserController : ControllerBase
         await _userRepository.DeleteUser(user);
         return Ok();
     }
-
-
 }

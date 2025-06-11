@@ -6,5 +6,7 @@ public class UserDTOs
     public string username { get; set; }
     public string email { get; set; }
     public string role { get; set; }
-    public DateTime createAt { get; set; } = DateTime.Now;
+    public DateTime createAt { get; set; }
+
+    public DateTime updateAt { get; set; }
 }

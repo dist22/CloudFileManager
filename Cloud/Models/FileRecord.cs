@@ -1,7 +1,12 @@
-﻿namespace Cloud.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Cloud.Models;
 
 public class FileRecord
 {
+    [Key]
+    [DatabaseGenerated((DatabaseGeneratedOption.Identity))]
     public int fileId { get; set; }
     public string fileName { get; set; } = string.Empty;
     public string filePath { get; set; } = string.Empty;
