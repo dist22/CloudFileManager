@@ -83,4 +83,24 @@ public class UserRepository : IUserRepository
         if (!(await _entity.SaveChangesAsync() > 0))
             throw new Exception("Error");
     }
+
+    public async Task<bool> SaveChangesAsync(User user)
+    {
+        _entity.Users.Update(user);
+        return await _entity.SaveChangesAsync() > 0;
+    }
+
+    public async Task AddFileToUserAsync(User user, FileRecord fileRecord)
+    {
+        user.files.Add(fileRecord);
+        _entity.Users.Update(user);
+        if (!(await _entity.SaveChangesAsync() > 0))
+            throw new Exception("Error");
+    }
+
+    public async Task<bool> DeleteFileFromUserASync(User user,FileRecord fileRecord)
+    {
+        user.files.Remove(fileRecord);
+        return await _entity.SaveChangesAsync() > 0 ? true : false;
+    }
 }

@@ -10,8 +10,6 @@ namespace Cloud.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-
-
     public UserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
@@ -24,9 +22,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("GetUserById/{id}")]
-    public async Task<UserDTOs> GetUserByIdController(int id)
+    public async Task<User> GetUserByIdController(int id)
     {
-        return await _userRepository.GetUserById<UserDTOs>(id);
+        return await _userRepository.GetUserById<User>(id);
     }
 
 

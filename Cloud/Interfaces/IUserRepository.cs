@@ -2,7 +2,6 @@
 using Cloud.DTOs;
 using Cloud.Models;
 
-
 namespace Cloud.Interfaces;
 
 public interface IUserRepository
@@ -13,4 +12,8 @@ public interface IUserRepository
     public Task<T> GetUserById<T>(int id);
     public Task EditUser(User user, UserForEdit userForEdit);
     public Task DeleteUser(User user);
+    public Task AddFileToUserAsync(User user, FileRecord fileRecord);
+    public Task<bool> DeleteFileFromUserASync(User user,FileRecord fileRecord);
+    public Task<bool> SaveChangesAsync(User user);
+    
 }

@@ -11,72 +11,41 @@ namespace Cloud.Repository;
 public class FileRepository : IFileRepository
 {
     private readonly DataContextEF _entity;
-    private readonly IMapper _mapper;
-    private readonly IBlobStorage _blobStorage;
 
-    public FileRepository(DataContextEF entity, IBlobStorage blobStorage, IMapper mapper)
+    public FileRepository(DataContextEF entity)
     {
         _entity = entity;
-        _blobStorage = blobStorage;
-        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<FileDTOs>> GetUserFiles(int id)
+    public async Task AddFileAsync(FileRecord file)
     {
-        var files = await _entity.Files
-            .AsNoTracking()
-            .Where(f => f.userId == id)
-            .ToListAsync() ?? throw new Exception("Error");
-
-        var result = _mapper.Map<IEnumerable<FileDTOs>>(files);
-        return result;
-    }
-
-    public async Task<IEnumerable<FileDTOs>> GetListOfFiles()
-    {
-        var fileList = await _entity.Files
-            .AsNoTracking()
-            .ToListAsync();
-
-        var result = _mapper.Map<IEnumerable<FileDTOs>>(fileList);
-        return result;
-    }
-
-
-    public async Task<string> UploadFile(IFormFile userFile)
-    {
-        var fileURL = await _blobStorage.UploadAsync(userFile);
-
-        var file = new FileRecord
-        {
-            fileName = userFile.FileName,
-            filePath = fileURL,
-            fileSize = userFile.Length,
-            fileType = userFile.ContentType,
-            uploadedAt = DateTime.Now,
-            userId = 23
-        };
-
         await _entity.Files.AddAsync(file);
-        if (!(await _entity.SaveChangesAsync() > 0))
+        if (!await SaveChangesASync())
             throw new Exception("Error");
-
-        return fileURL;
     }
 
-    public async Task<FileRecord> GetFile(int fileId)
+    public async Task<IEnumerable<FileRecord>> GetAllFilesAsync()
     {
         return await _entity.Files
             .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.fileId == fileId) ?? throw new Exception("Error");
+            .ToListAsync();
     }
 
-    public async Task<bool> DeleteFile(FileRecord fileRecord)
+    public async Task<FileRecord?> GetFileByIdAsync(int id)
     {
-        var result = await _blobStorage.DeleteAsync(fileRecord.fileName);
-        _entity.Files.Remove(fileRecord);
-        if (!(await _entity.SaveChangesAsync() > 0))
-            throw new Exception("Error");
-        return result;
+        return await _entity.Files
+            .AsNoTracking()
+            .FirstOrDefaultAsync(f => f.fileId == id);
+    }
+
+    public async Task<bool> SaveChangesASync()
+    {
+        return await _entity.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool> DeleteFileAsync(FileRecord file)
+    {
+        _entity.Files.Remove(file);
+        return await SaveChangesASync() ? true : throw new Exception("Error");
     }
 }

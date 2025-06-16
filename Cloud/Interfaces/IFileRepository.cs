@@ -1,17 +1,16 @@
-﻿using Cloud.DTOs;
-using Cloud.Models;
+﻿using Cloud.Models;
 
 namespace Cloud.Interfaces;
 
 public interface IFileRepository
 {
-    public Task<string> UploadFile(IFormFile userFile);
+    public Task AddFileAsync(FileRecord file);
 
-    public Task<IEnumerable<FileDTOs>> GetListOfFiles();
-    
-    public Task<IEnumerable<FileDTOs>> GetUserFiles(int id);
+    public Task<IEnumerable<FileRecord>> GetAllFilesAsync();
 
-    public Task<bool> DeleteFile(FileRecord fileRecord);
+    public Task<FileRecord?> GetFileByIdAsync(int id);
 
-    public Task<FileRecord> GetFile(int fileId);
+    protected Task<bool> SaveChangesASync();
+
+    public Task<bool> DeleteFileAsync(FileRecord file);
 }
