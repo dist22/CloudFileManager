@@ -29,6 +29,13 @@ public class FileController : ControllerBase
         return await _fileServices.GetAllUserFilesAsync(userId);
     }
 
+    [HttpGet("Download/{fileId}")]
+    public async Task<IActionResult> DownloadFileController(int fileId)
+    {
+        var (stream, fileName) = (await _fileServices.DownloadFileAsync(fileId)).Value;
+        return stream == null ? NotFound() : File(stream, "application/octet-stream", fileName);
+    }
+
     [HttpPost("Upload/{id}")]
     public async Task<string> UploadFileController(int id,IFormFile file)
     {
@@ -36,11 +43,11 @@ public class FileController : ControllerBase
     }
 
 
-    [HttpDelete("Delete/{userid},{fileId}")]
-    public async Task<IActionResult> DeleteFileController(int userId, int fileId)
+    [HttpDelete("Delete/{fileId}")]
+    public async Task<IActionResult> DeleteFileController(int fileId)
     {
-        var result = await _fileServices.DeleteFileAsync(userId, fileId);
-        return result ? Ok() : NotFound();
+        var result = await _fileServices.DeleteFileAsync(fileId);
+        return result ? Ok("Success") : NotFound("File with this id not found");
     }
 
 }

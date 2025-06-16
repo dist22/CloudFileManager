@@ -101,6 +101,7 @@ public class UserRepository : IUserRepository
     public async Task<bool> DeleteFileFromUserASync(User user,FileRecord fileRecord)
     {
         user.files.Remove(fileRecord);
+        _entity.Users.Update(user);
         return await _entity.SaveChangesAsync() > 0 ? true : false;
     }
 }

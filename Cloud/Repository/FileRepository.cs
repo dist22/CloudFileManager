@@ -35,7 +35,8 @@ public class FileRepository : IFileRepository
     {
         return await _entity.Files
             .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.fileId == id);
+            .FirstOrDefaultAsync(f => f.fileId == id) ?? 
+               throw new Exception("File with this id not found");
     }
 
     public async Task<bool> SaveChangesASync()

@@ -14,6 +14,6 @@ public class FileConfiguration : IEntityTypeConfiguration<FileRecord>
             .HasOne(f => f.user)
             .WithMany(u => u.files)
             .HasForeignKey(f => f.userId);
-        
+
     }
 }
