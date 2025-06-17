@@ -10,6 +10,8 @@ public interface IFileServices
 
     public Task<bool> DeleteFileAsync(int fileId);
 
+    public Task<FileDTOs> GetFileByIdAsync(int fileId);
+
     public Task<IEnumerable<FileDTOs>> GetAllUserFilesAsync(int userId);
 
     public Task<IEnumerable<FileDTOs>> GetAllFilesAsync();

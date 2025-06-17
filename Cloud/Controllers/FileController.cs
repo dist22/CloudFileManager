@@ -23,7 +23,13 @@ public class FileController : ControllerBase
         return await _fileServices.GetAllFilesAsync();
     }
 
-    [HttpGet("GetUserFiles")]
+    [HttpGet("GetFile/{fileId}")]
+    public async Task<FileDTOs> GetFileController(int fileId)
+    {
+        return await _fileServices.GetFileByIdAsync(fileId);
+    }
+
+    [HttpGet("GetUserFiles/{userId}")]
     public async Task<IEnumerable<FileDTOs>> GetUserFilesController(int userId)
     {
         return await _fileServices.GetAllUserFilesAsync(userId);

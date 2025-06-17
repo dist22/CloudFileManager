@@ -13,8 +13,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder
             .HasMany(u => u.files)
-            .WithOne(f => f.user)
-            .OnDelete(DeleteBehavior.Cascade);
-
+            .WithOne(f => f.user);
+        
     }
 }

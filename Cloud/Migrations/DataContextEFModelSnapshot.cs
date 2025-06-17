@@ -55,7 +55,7 @@ namespace Cloud.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", (string)null);
                 });
 
             modelBuilder.Entity("Cloud.Models.User", b =>
@@ -86,7 +86,7 @@ namespace Cloud.Migrations
 
                     b.HasKey("userId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Cloud.Models.FileRecord", b =>

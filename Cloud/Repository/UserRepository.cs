@@ -1,107 +1,49 @@
 ﻿using System.Linq.Expressions;
-using AutoMapper;
 using Cloud.Data;
 using Cloud.Interfaces;
-using Cloud.DTOs;
 using Cloud.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cloud.Repository;
 
-public class UserRepository : IUserRepository
+public class UserRepository(DataContextEF entity) : BaseRepository<User>(entity), IUserRepository
 {
-    private readonly DataContextEF _entity;
-    private readonly IMapper _mapper;
-
-    public UserRepository(DataContextEF entity, IMapper mapper)
+    public async Task<IEnumerable<User>> GetUsers()
     {
-        _entity = entity;
-        _mapper = mapper;
-    }
-
-
-    public async Task<IEnumerable<UserDTOs>> GetListOfUsers()
-    {
-        var users = await _entity.Users
+        return await _dbSet
             .AsNoTracking()
             .ToListAsync();
-        return _mapper.Map<IEnumerable<UserDTOs>>(users);
     }
 
-    public async Task<T> GetUserById<T>(int id)
+    public async Task<User> GetUser(int id)
     {
-        object result = await _entity.Users
+        return await _dbSet
                             .AsNoTracking()
+                            .Include(u => u.files)
                             .FirstOrDefaultAsync(u => u.userId == id) ??
                         throw new Exception("Error");
+    }
 
-        if (typeof(T) == typeof(User))
-        {
-            return (T)result;
-        }
-        else if (typeof(T) == typeof(UserDTOs))
-        {
-            return _mapper.Map<T>(result);
-        }
-        else
-            throw new NotSupportedException($"Type {typeof(T).Name} - non supported");
+    public async Task<bool> EditUser(User user)
+    {
+        return await Update(user);
+    }
+
+    public async Task<bool> AddUserAsync(User user)
+    {
+        await _dbSet.AddAsync(user);
+        return await SaveChangesAsync();
     }
 
     public async Task<bool> UserExists(Expression<Func<User, bool>> predicate)
     {
-        return await _entity.Users
+        return await _dbSet
             .AsNoTracking()
             .AnyAsync(predicate);
     }
-
-    public async Task CreateUser(UserForCreate userForCreate)
+    
+    public async Task<bool> DeleteUser(User user)
     {
-        User user = new User
-        {
-            email = userForCreate.email,
-            username = userForCreate.username
-        };
-        await _entity.AddAsync(user);
-        if (!(await _entity.SaveChangesAsync() > 0))
-            throw new Exception("Error");
-    }
-
-    public async Task EditUser(User user, UserForEdit userForEdit)
-    {
-        user.username = userForEdit.username;
-        user.email = userForEdit.email;
-        user.role = userForEdit.role;
-        user.updateAt = DateTime.Now;
-        _entity.Users.Update(user);
-        if (!(await _entity.SaveChangesAsync() > 0))
-            throw new Exception("Error");
-    }
-
-    public async Task DeleteUser(User user)
-    {
-        _entity.Users.Remove(user);
-        if (!(await _entity.SaveChangesAsync() > 0))
-            throw new Exception("Error");
-    }
-
-    public async Task<bool> SaveChangesAsync(User user)
-    {
-        _entity.Users.Update(user);
-        return await _entity.SaveChangesAsync() > 0;
-    }
-
-    public async Task AddFileToUserAsync(User user, FileRecord fileRecord)
-    {
-        user.files.Add(fileRecord);
-        _entity.Users.Update(user);
-        if (!(await _entity.SaveChangesAsync() > 0))
-            throw new Exception("Error");
-    }
-
-    public async Task<bool> DeleteFileFromUserASync(User user,FileRecord fileRecord)
-    {
-        user.files.Remove(fileRecord);
-        _entity.Users.Update(user);
-        return await _entity.SaveChangesAsync() > 0 ? true : false;
+        return await Remove(user);
     }
 }

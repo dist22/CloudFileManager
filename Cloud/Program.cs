@@ -19,6 +19,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IBlobStorage, BlobStorage>();
 builder.Services.AddScoped<IFileServices, FileServices>();
+builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 
 

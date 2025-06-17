@@ -8,45 +8,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cloud.Repository;
 
-public class FileRepository : IFileRepository
+public class FileRepository(DataContextEF entity) : BaseRepository<FileRecord>(entity), IFileRepository
 {
-    private readonly DataContextEF _entity;
-
-    public FileRepository(DataContextEF entity)
-    {
-        _entity = entity;
-    }
-
     public async Task AddFileAsync(FileRecord file)
     {
-        await _entity.Files.AddAsync(file);
-        if (!await SaveChangesASync())
+        await _dbSet.AddAsync(file);
+        if (!await SaveChangesAsync())
             throw new Exception("Error");
     }
 
-    public async Task<IEnumerable<FileRecord>> GetAllFilesAsync()
+    public async Task<IEnumerable<FileRecord>> GetFilesAsync()
     {
-        return await _entity.Files
+        return await _dbSet
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<FileRecord?> GetFileByIdAsync(int id)
+    public async Task<FileRecord?> GetFileAsync(int id)
     {
-        return await _entity.Files
+        return await _dbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(f => f.fileId == id) ?? 
                throw new Exception("File with this id not found");
     }
 
-    public async Task<bool> SaveChangesASync()
-    {
-        return await _entity.SaveChangesAsync() > 0;
-    }
-
     public async Task<bool> DeleteFileAsync(FileRecord file)
     {
-        _entity.Files.Remove(file);
-        return await SaveChangesASync() ? true : throw new Exception("Error");
+        return await Remove(file) ? true : throw new Exception("Error");
     }
 }

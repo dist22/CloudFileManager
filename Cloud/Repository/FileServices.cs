@@ -26,7 +26,7 @@ public class FileServices : IFileServices
 
     public async Task<string> UploadFileAsync(int userId, IFormFile file)
     {
-        var user = await _userRepository.GetUserById<User>(userId);
+        var user = await _userRepository.GetUser(userId);
         
         var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
         var extension = Path.GetExtension(file.FileName);
@@ -45,7 +45,7 @@ public class FileServices : IFileServices
 
         await _fileRepository.AddFileAsync(fileRecord);
         user.files.Add(fileRecord);
-        var result = await _userRepository.SaveChangesAsync(user);
+        var result = await _userRepository.EditUser(user);
         Console.WriteLine(result);
 
         return fileUrl;
@@ -53,31 +53,38 @@ public class FileServices : IFileServices
 
     public async Task<bool> DeleteFileAsync(int fileId)
     {
-        var file = await _fileRepository.GetFileByIdAsync(fileId);
-        var user = await _userRepository.GetUserById<User>(file.userId);
+        var file = await _fileRepository.GetFileAsync(fileId);
+        var user = await _userRepository.GetUser(file.userId);
 
         var resultAzure = await _blobStorage.DeleteAsync(file.fileName);
         var resultFile = await _fileRepository.DeleteFileAsync(file);
-        var resultUser = await _userRepository.DeleteFileFromUserASync(user, file);
+        user.files.Remove(file);
+        var resultUser = await _userRepository.EditUser(user);
         return resultFile && resultUser && resultAzure;
+    }
+
+    public async Task<FileDTOs> GetFileByIdAsync(int fileId)
+    {
+        var file = await _fileRepository.GetFileAsync(fileId);
+        return _mapper.Map<FileDTOs>(file);
     }
 
     public async Task<IEnumerable<FileDTOs>> GetAllUserFilesAsync(int userId)
     {
-        var files = await _fileRepository.GetAllFilesAsync();
+        var files = await _fileRepository.GetFilesAsync();
         var result = files.Where(f => f.userId == userId).ToList();
         return _mapper.Map<IEnumerable<FileDTOs>>(result);
     }
 
     public async Task<IEnumerable<FileDTOs>> GetAllFilesAsync()
     {
-        var result = await _fileRepository.GetAllFilesAsync();
+        var result = await _fileRepository.GetFilesAsync();
         return _mapper.Map<IEnumerable<FileDTOs>>(result);
     }
 
     public async Task<(Stream?, string fileName)?> DownloadFileAsync(int fileId)
     {
-        var file = await _fileRepository.GetFileByIdAsync(fileId);
+        var file = await _fileRepository.GetFileAsync(fileId);
         var stream = await _blobStorage.DownloadAsync(file.fileName);
         return (stream, file.fileName);
     }

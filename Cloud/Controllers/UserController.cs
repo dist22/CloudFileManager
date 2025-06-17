@@ -9,51 +9,42 @@ namespace Cloud.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
-    public UserController(IUserRepository userRepository)
+    private readonly IUserServices _userServices;
+    public UserController(IUserServices userServices)
     {
-        _userRepository = userRepository;
+        _userServices = userServices;
     }
 
-    [HttpGet("GetListOfUsers")]
-    public async Task<IEnumerable<UserDTOs>> GetListOfUsersController()
+    [HttpGet("GetUsers")]
+    public async Task<IEnumerable<UserDTOs>> GetUsersController()
     {
-        return await _userRepository.GetListOfUsers();
+        return await _userServices.GetUsersAsync();
     }
 
-    [HttpGet("GetUserById/{id}")]
-    public async Task<User> GetUserByIdController(int id)
+    [HttpGet("GetUserById/{userId}")]
+    public async Task<UserDTOs> GetUserController(int userId)
     {
-        return await _userRepository.GetUserById<User>(id);
+        return await _userServices.GetUserAsync(userId);
     }
-
-
+    
     [HttpPost("CreateUser")]
-    public async Task<IActionResult> CreateUserController(UserForCreate userForCreate)
+    public async Task<IActionResult> CreateUserController([FromForm]UserForCreate userForCreate)
     {
-        if (!await _userRepository.UserExists(u => u.email == userForCreate.email) &&
-            !await _userRepository.UserExists(u => u.username == userForCreate.username))
-        {
-            await _userRepository.CreateUser(userForCreate);
-            return Ok("Successful");
-        }
-
-        return Conflict("User with this email or username already registered");
+        var result = await _userServices.CreateUserAsync(userForCreate);
+        return result ? Ok("Successful") : Problem();
     }
 
-    [HttpPut("EditUser/{id}")]
-    public async Task<IActionResult> EditUserController(int id, UserForEdit userForEdit)
+    [HttpPut("EditUser/{userId}")]
+    public async Task<IActionResult> EditUserController(int userId, [FromForm]UserForEdit userForEdit)
     {
-        var user = await _userRepository.GetUserById<User>(id);
-        await _userRepository.EditUser(user, userForEdit);
-        return Ok();
+        var result = await _userServices.EditUserAsync(userId, userForEdit);
+        return result ? Ok("Successful") : Problem();
     }
 
-    [HttpDelete("DeleteUser/{id}")]
-    public async Task<IActionResult> DeleteUserController(int id)
+    [HttpDelete("DeleteUser/{userId}")]
+    public async Task<IActionResult> DeleteUserController(int userId)
     {
-        var user = await _userRepository.GetUserById<User>(id);
-        await _userRepository.DeleteUser(user);
-        return Ok();
+        var result = await _userServices.DeleteUserAsync(userId);
+        return result ? Ok("Successful") : Conflict();
     }
 }

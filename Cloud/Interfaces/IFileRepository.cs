@@ -6,11 +6,9 @@ public interface IFileRepository
 {
     public Task AddFileAsync(FileRecord file);
 
-    public Task<IEnumerable<FileRecord>> GetAllFilesAsync();
+    public Task<IEnumerable<FileRecord>> GetFilesAsync();
 
-    public Task<FileRecord?> GetFileByIdAsync(int id);
-
-    protected Task<bool> SaveChangesASync();
-
+    public Task<FileRecord?> GetFileAsync(int id);
+    
     public Task<bool> DeleteFileAsync(FileRecord file);
 }
