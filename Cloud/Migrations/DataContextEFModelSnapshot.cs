@@ -38,8 +38,9 @@ namespace Cloud.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("fileSize")
-                        .HasColumnType("bigint");
+                    b.Property<string>("fileSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("fileType")
                         .IsRequired()
@@ -55,7 +56,7 @@ namespace Cloud.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Files", (string)null);
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("Cloud.Models.User", b =>
@@ -86,7 +87,7 @@ namespace Cloud.Migrations
 
                     b.HasKey("userId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Cloud.Models.FileRecord", b =>

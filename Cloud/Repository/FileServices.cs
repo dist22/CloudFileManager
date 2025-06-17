@@ -12,15 +12,17 @@ public class FileServices : IFileServices
     private readonly IUserRepository _userRepository;
     private readonly IFileRepository _fileRepository;
     private readonly IBlobStorage _blobStorage;
+    private readonly IFileSizeConverter _fileSizeConverter;
     private readonly IMapper _mapper;
 
     public FileServices(IUserRepository userRepository, IFileRepository fileRepository, IMapper mapper,
-        IBlobStorage blobStorage)
+        IBlobStorage blobStorage, IFileSizeConverter fileSizeConverter)
     {
         _userRepository = userRepository;
         _fileRepository = fileRepository;
         _mapper = mapper;
         _blobStorage = blobStorage;
+        _fileSizeConverter = fileSizeConverter;
     }
 
 
@@ -38,7 +40,7 @@ public class FileServices : IFileServices
         {
             fileName = uniqueFileName,
             filePath = fileUrl,
-            fileSize = file.Length,
+            fileSize = _fileSizeConverter.FormatSize(file.Length),
             fileType = file.ContentType,
             userId = user.userId
         };

@@ -10,8 +10,9 @@ public class FileRecord
     public int fileId { get; set; }
     public string fileName { get; set; } = string.Empty;
     public string filePath { get; set; } = string.Empty;
-    public long fileSize { get; set; }
+    public string fileSize { get; set; } = string.Empty;
     public string fileType { get; set; } = string.Empty;
+    
     public DateTime uploadedAt { get; set; } = DateTime.Now;
 
 

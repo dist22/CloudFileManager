@@ -1,0 +1,29 @@
+﻿using Cloud.Interfaces;
+
+namespace Cloud.Repository;
+
+public class FileSizeConverter : IFileSizeConverter
+{
+    private FileSizeConverter() { }
+
+    public static FileSizeConverter instance { get; } = new FileSizeConverter();
+
+
+    public string FormatSize(long bytes)
+    {
+        string[] sizeUnits = { "B", "KB", "MB", "GB", "TB" };
+        double size = bytes;
+        int unitIndex = 0;
+
+        while (size >= 1024 && unitIndex < sizeUnits.Length - 1)
+        {
+            size /= 1024;
+            unitIndex++;
+        }
+
+        if (unitIndex == 0)
+            return $"{(long)size} {sizeUnits[unitIndex]}";
+
+        return $"{size:F2} {sizeUnits[unitIndex]}";
+    }
+}
