@@ -5,7 +5,7 @@ namespace Cloud.Interfaces;
 
 public interface IUserRepository
 {
-    public Task<bool> AddUserAsync(User user);
+    public Task<User> AddUserAsync(User user);
     public Task<bool> UserExists(Expression<Func<User, bool>> predicate);
     public Task<IEnumerable<User>> GetUsers();
     public Task<User> GetUser(int id);

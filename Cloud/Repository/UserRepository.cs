@@ -29,10 +29,10 @@ public class UserRepository(DataContextEF entity) : BaseRepository<User>(entity)
         return await Update(user);
     }
 
-    public async Task<bool> AddUserAsync(User user)
+    public async Task<User> AddUserAsync(User user)
     {
-        await _dbSet.AddAsync(user);
-        return await SaveChangesAsync();
+        var result = await _dbSet.AddAsync(user);
+        return await SaveChangesAsync() ? result.Entity : null;
     }
 
     public async Task<bool> UserExists(Expression<Func<User, bool>> predicate)

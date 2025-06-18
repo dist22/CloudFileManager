@@ -39,8 +39,11 @@ public class UserServices : IUserServices
                     await _userRepository.UserExists(u => u.username == userForCreate.username);
         if (exist)
             throw new Exception("User already exists");
-        var result = await _userRepository.AddUserAsync(_mapper.Map<User>(userForCreate));
-        return result;
+        
+        var user = await _userRepository.AddUserAsync((_mapper.Map<User>(userForCreate)));
+        user.containerName = await _blobStorage.CreateUserContainerAsync(user.userId.ToString());
+        
+        return await _userRepository.EditUser(user);
     }
 
     public async Task<bool> EditUserAsync(int userId, UserForEdit userForEdit)
@@ -49,6 +52,7 @@ public class UserServices : IUserServices
         user.username = userForEdit.username;
         user.email = userForEdit.email;
         user.role = userForEdit.role;
+        user.updateAt = DateTime.Now;
         return await _userRepository.EditUser(user);
     }
 
@@ -57,9 +61,9 @@ public class UserServices : IUserServices
         var user = await _userRepository.GetUser(userId);
         foreach (var file in user.files.ToList())
         {
-            await _blobStorage.DeleteAsync(file.fileName);
             await _fileRepository.DeleteFileAsync(file);
         }
+        await _blobStorage.DeleteUserContainerAsync(user);
         return await _userRepository.DeleteUser(user);
     }
 }

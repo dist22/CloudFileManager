@@ -1,38 +1,52 @@
 ﻿using Cloud.Interfaces;
+using Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Cloud.Repository;
 
 public class BlobStorage : IBlobStorage
 {
-    private readonly BlobContainerClient _client;
+    private readonly BlobServiceClient _client;
 
-    public BlobStorage(IConfiguration configuration)
+    public BlobStorage(BlobServiceClient client)
     {
-        var connectionString = configuration["Azure:ConnectionString"];
-        var container = configuration["Azure:Container"];
-        _client = new BlobContainerClient(connectionString, container);
+        _client = client;
     }
 
-    public async Task<string> UploadAsync(string uniqueFileName, IFormFile file)
+    public async Task<string> CreateUserContainerAsync(string userId)
     {
-        var blobClient = _client.GetBlobClient(uniqueFileName);
+        var containerName = $"user-{userId}-{Guid.NewGuid()}".ToLower();
+        var containerClient = _client.GetBlobContainerClient(containerName);
+        await containerClient.CreateIfNotExistsAsync(PublicAccessType.None);
+        return containerName;
+    }
+
+    public async Task<bool> DeleteUserContainerAsync(User user)
+    {
+        return await _client.GetBlobContainerClient(user.containerName).DeleteIfExistsAsync();
+    }
+
+    public async Task<string> UploadAsync(string uniqueFileName, IFormFile file, User user)
+    {
+
+        var blobClient = _client.GetBlobContainerClient(user.containerName).GetBlobClient(uniqueFileName);
         using var stream = file.OpenReadStream();
         await blobClient.UploadAsync(stream, overwrite: false);
         return blobClient.Uri.ToString();
     }
 
-    public async Task<bool> DeleteAsync(string fileName)
+    public async Task<bool> DeleteAsync(FileRecord file, User user)
     {
-        var blobClient = _client.GetBlobClient(fileName);
+        var blobClient = _client.GetBlobContainerClient(user.containerName).GetBlobClient(file.fileName);
         return await blobClient.DeleteIfExistsAsync();
     }
 
-    public async Task<Stream?> DownloadAsync(string fileName)
+    public async Task<Stream?> DownloadAsync(FileRecord file, User user)
     {
-        var blobClient = _client.GetBlobClient(fileName);
+        var blobClient = _client.GetBlobContainerClient(user.containerName).GetBlobClient(file.fileName);
         var exists = await blobClient.ExistsAsync();
         return exists ? (await blobClient.DownloadAsync()).Value.Content : 
             throw new Exception("Error");

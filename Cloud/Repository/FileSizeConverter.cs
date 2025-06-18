@@ -4,11 +4,6 @@ namespace Cloud.Repository;
 
 public class FileSizeConverter : IFileSizeConverter
 {
-    private FileSizeConverter() { }
-
-    public static FileSizeConverter instance { get; } = new FileSizeConverter();
-
-
     public string FormatSize(long bytes)
     {
         string[] sizeUnits = { "B", "KB", "MB", "GB", "TB" };

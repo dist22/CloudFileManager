@@ -12,6 +12,7 @@ public class User
     public string username { get; set; } = string.Empty;
     public string email { get; set; } = string.Empty;
 
+    public string containerName { get; set; } = string.Empty;
     public string role { get; set; } = "Admin";
     
     public DateTime createAt { get; set; } = DateTime.Now;
