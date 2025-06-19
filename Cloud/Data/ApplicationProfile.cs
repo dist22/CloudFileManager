@@ -12,11 +12,11 @@ public class ApplicationProfile : Profile
         CreateMap<UserDTOs, User>();
         CreateMap<User, UserDTOs>();
 
-        CreateMap<UserForCreate, User>();
-        CreateMap<User, UserForCreate>();
+        CreateMap<UserCreateDTO, User>();
+        CreateMap<User, UserCreateDTO>();
 
-        CreateMap<User, UserForEdit>();
-        CreateMap<UserForEdit, User>();
+        CreateMap<User, UserEditDTO>();
+        CreateMap<UserEditDTO, User>();
 
         CreateMap<FileRecord, FileDTOs>();
         CreateMap<FileDTOs, FileRecord>();

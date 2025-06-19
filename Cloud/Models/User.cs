@@ -13,8 +13,10 @@ public class User
     public string email { get; set; } = string.Empty;
 
     public string containerName { get; set; } = string.Empty;
-    public string role { get; set; } = "Admin";
-    
+    public string role { get; set; } = "User";
+
+    public string password { get; set; } = string.Empty;
+
     public DateTime createAt { get; set; } = DateTime.Now;
     
     public DateTime updateAt { get; set; } = DateTime.Now;

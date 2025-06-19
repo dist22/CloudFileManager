@@ -28,14 +28,14 @@ public class FileServices : IFileServices
 
     public async Task<string> UploadFileAsync(int userId, IFormFile file)
     {
-        var user = await _userRepository.GetUser(userId);
-        
+        var user = await _userRepository.GetUser(u => u.userId == userId);
+
         var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
         var extension = Path.GetExtension(file.FileName);
         var uniqueFileName = $"{originalFileName}_{Guid.NewGuid()}{extension}";
 
-        var fileUrl = await _blobStorage.UploadAsync(uniqueFileName,file, user);
-        
+        var fileUrl = await _blobStorage.UploadAsync(uniqueFileName, file, user);
+
         var fileRecord = new FileRecord
         {
             fileName = uniqueFileName,
@@ -55,13 +55,13 @@ public class FileServices : IFileServices
     public async Task<bool> DeleteFileAsync(int fileId)
     {
         var file = await _fileRepository.GetFileAsync(fileId);
-        var user = await _userRepository.GetUser(file.userId);
-        
+        var user = await _userRepository.GetUser(u => u.userId == file.userId);
+
         var resultAzure = await _blobStorage.DeleteAsync(file, user);
-        
+
         var resultFile = await _fileRepository.DeleteFileAsync(file);
-        
-        return resultFile &&  resultAzure;
+
+        return resultFile && resultAzure;
     }
 
     public async Task<FileDTOs> GetFileByIdAsync(int fileId)
@@ -86,7 +86,7 @@ public class FileServices : IFileServices
     public async Task<(Stream?, string fileName)?> DownloadFileAsync(int fileId)
     {
         var file = await _fileRepository.GetFileAsync(fileId);
-        var user = await _userRepository.GetUser(file.userId);
+        var user = await _userRepository.GetUser(u => u.userId == file.userId);
         var stream = await _blobStorage.DownloadAsync(file, user);
         return (stream, file.fileName);
     }

@@ -29,36 +29,36 @@ public class UserServices : IUserServices
 
     public async Task<UserDTOs> GetUserAsync(int userId)
     {
-        var user = await _userRepository.GetUser(userId);
+        var user = await _userRepository.GetUser(u => u.userId == userId);
         return _mapper.Map<UserDTOs>(user);
     }
 
-    public async Task<bool> CreateUserAsync(UserForCreate userForCreate)
-    {
-        var exist = await _userRepository.UserExists(u => u.email == userForCreate.email) &&
-                    await _userRepository.UserExists(u => u.username == userForCreate.username);
-        if (exist)
-            throw new Exception("User already exists");
-        
-        var user = await _userRepository.AddUserAsync((_mapper.Map<User>(userForCreate)));
-        user.containerName = await _blobStorage.CreateUserContainerAsync(user.userId.ToString());
-        
-        return await _userRepository.EditUser(user);
-    }
+    // public async Task<bool> CreateUserAsync(UserCreateDTO userCreateDto)
+    // {
+    //     var exist = await _userRepository.UserExists(u => u.email == userCreateDto.email) &&
+    //                 await _userRepository.UserExists(u => u.username == userCreateDto.username);
+    //     if (exist)
+    //         throw new Exception("User already exists");
+    //     
+    //     var user = await _userRepository.AddUserAsync((_mapper.Map<User>(userCreateDto)));
+    //     user.containerName = await _blobStorage.CreateUserContainerAsync(user.userId.ToString());
+    //     
+    //     return await _userRepository.EditUser(user);
+    // }
 
-    public async Task<bool> EditUserAsync(int userId, UserForEdit userForEdit)
+    public async Task<bool> EditUserAsync(int userId, UserEditDTO userEditDto)
     {
-        var user = await _userRepository.GetUser(userId);
-        user.username = userForEdit.username;
-        user.email = userForEdit.email;
-        user.role = userForEdit.role;
+        var user = await _userRepository.GetUser(u => u.userId == userId);
+        user.username = userEditDto.username;
+        user.email = userEditDto.email;
+        user.role = userEditDto.role;
         user.updateAt = DateTime.Now;
         return await _userRepository.EditUser(user);
     }
 
     public async Task<bool> DeleteUserAsync(int userId)
     {
-        var user = await _userRepository.GetUser(userId);
+        var user = await _userRepository.GetUser(u => u.userId ==userId);
         foreach (var file in user.files.ToList())
         {
             await _fileRepository.DeleteFileAsync(file);

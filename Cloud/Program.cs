@@ -34,8 +34,10 @@ builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IBlobStorage, BlobStorage>();
 builder.Services.AddScoped<IFileServices, FileServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddSingleton<IFileSizeConverter, FileSizeConverter>();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 
 

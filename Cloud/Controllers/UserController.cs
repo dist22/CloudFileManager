@@ -27,17 +27,17 @@ public class UserController : ControllerBase
         return await _userServices.GetUserAsync(userId);
     }
     
-    [HttpPost("CreateUser")]
-    public async Task<IActionResult> CreateUserController([FromForm]UserForCreate userForCreate)
-    {
-        var result = await _userServices.CreateUserAsync(userForCreate);
-        return result ? Ok("Successful") : Problem();
-    }
+    // [HttpPost("CreateUser")]
+    // public async Task<IActionResult> CreateUserController([FromForm]UserCreateDTO userCreateDto)
+    // {
+    //     var result = await _userServices.CreateUserAsync(userCreateDto);
+    //     return result ? Ok("Successful") : Problem();
+    // }
 
     [HttpPut("EditUser/{userId}")]
-    public async Task<IActionResult> EditUserController(int userId, [FromForm]UserForEdit userForEdit)
+    public async Task<IActionResult> EditUserController(int userId, [FromForm]UserEditDTO userEditDto)
     {
-        var result = await _userServices.EditUserAsync(userId, userForEdit);
+        var result = await _userServices.EditUserAsync(userId, userEditDto);
         return result ? Ok("Successful") : Problem();
     }
 

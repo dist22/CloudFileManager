@@ -1,6 +1,6 @@
 ﻿namespace Cloud.DTOs;
 
-public class UserForEdit
+public class UserEditDTO
 {
     public string username { get; set; } = string.Empty;
     public string email { get; set; } = string.Empty;

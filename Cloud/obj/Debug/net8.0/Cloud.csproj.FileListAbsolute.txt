@@ -180,3 +180,4 @@ D:\C#\Cloud\Cloud\bin\Debug\net8.0\Azure.Storage.Blobs.dll
 D:\C#\Cloud\Cloud\bin\Debug\net8.0\Azure.Storage.Common.dll
 D:\C#\Cloud\Cloud\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll
 D:\C#\Cloud\Cloud\bin\Debug\net8.0\System.IO.Hashing.dll
+D:\C#\Cloud\Cloud\bin\Debug\net8.0\BCrypt.Net-Next.dll

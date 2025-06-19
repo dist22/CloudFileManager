@@ -78,6 +78,10 @@ namespace Cloud.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

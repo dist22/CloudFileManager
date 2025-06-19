@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6aCALQVA4mP6vMJ5mA3uFDUKbjDy083yvFR6g02Gwp0v0rIbn4ZzN2a8Zkpt8mp9SB7sZHKbfe5yQ7aHjClRIQ==",
+  "dgSpecHash": "rp2IP0z50FzfqWIyJzYsjaVVpnfjC/kng9+L266ceBoAoiWkeTYQFmMTJCYbr5DECDrryjPXkwbPmctUrupq0Q==",
   "success": true,
   "projectFilePath": "D:\\C#\\Cloud\\Cloud\\Cloud.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Di_St\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\azure.storage.blobs\\12.26.0-beta.1\\azure.storage.blobs.12.26.0-beta.1.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\azure.storage.common\\12.25.0-beta.1\\azure.storage.common.12.25.0-beta.1.nupkg.sha512",
+    "C:\\Users\\Di_St\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.1\\microsoft.aspnetcore.authentication.jwtbearer.8.0.1.nupkg.sha512",
     "C:\\Users\\Di_St\\.nuget\\packages\\microsoft.aspnetcore.http\\2.3.0\\microsoft.aspnetcore.http.2.3.0.nupkg.sha512",
