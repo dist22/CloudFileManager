@@ -9,7 +9,7 @@ namespace Cloud.Controllers;
 [Route("[controller]")]
 public class UserController(IUserServices userServices) : ControllerBase
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet("GetUsers")]
     public async Task<IEnumerable<UserDTOs>> GetUsersController()
     {
