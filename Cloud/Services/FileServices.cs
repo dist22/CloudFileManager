@@ -5,7 +5,7 @@ using Cloud.DTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cloud.Repository;
+namespace Cloud.Services;
 
 public class FileServices : IFileServices
 {

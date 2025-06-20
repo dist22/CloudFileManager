@@ -6,22 +6,22 @@ namespace Cloud.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(IAuthServices authServices) : ControllerBase
 {
-
-    private readonly IAuthServices _authServices;
-
-    public AuthController(IAuthServices authServices)
-    {
-        _authServices = authServices;
-    }
-
     [HttpPost("Reg")]
     public async Task<IActionResult> RegUserController([FromForm] UserCreateDTO userCreateDto)
-        => await _authServices.RegisteredAsync(userCreateDto) ? Ok("Successful") : Conflict();
+        => await authServices.RegisteredAsync(userCreateDto) ? Ok("Successful") : Conflict();
 
     [HttpPost("Login")]
     public async Task<IActionResult> LoginController([FromForm] UserLoginDTO userLoginDto)
-        => await _authServices.LoginAsync(userLoginDto) ? Ok() : Conflict();
-
+    {
+        var token = await authServices.LoginAsync(userLoginDto);
+        
+        Response.Cookies.Append("token", token);
+        
+        return Ok(new Dictionary<string, string>
+        {
+            { "token:", token }
+        });
+    }
 }

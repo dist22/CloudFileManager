@@ -1,26 +1,69 @@
+using System.Text;
 using Azure.Storage.Blobs;
 using Cloud.Data;
 using Cloud.Interfaces;
 using Cloud.Repository;
 using Cloud.Configuration;
+using Cloud.Jwt;
+using Cloud.JwtProvider;
+using Cloud.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection(nameof(JwtOptions)));
+
+builder.Services.Configure<AzureStorageOptions>(
+    builder.Configuration.GetSection(nameof(AzureStorageOptions)));
+
 builder.Services.AddSwaggerGen();
+
+var jwtSettings = builder.Configuration.GetSection("JwtOptions");
+
+var key = Encoding.UTF8.GetBytes(jwtSettings["TokenKey"] ?? string.Empty);
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["token"];
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 
 builder.Services.AddDbContext<DataContextEF>(options =>{
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
 });
 
-builder.Services.Configure<AzureStorageOptions>(
-    builder.Configuration.GetSection(nameof(AzureStorageOptions)));
 
-// Реєструємо BlobServiceClient як Singleton
 builder.Services.AddSingleton(sp =>
 {
     var options = sp.GetRequiredService<IOptions<AzureStorageOptions>>().Value;
@@ -38,6 +81,7 @@ builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddSingleton<IFileSizeConverter, FileSizeConverter>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 
 
@@ -54,7 +98,8 @@ else
     app.UseHttpsRedirection();
 }
 
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
 

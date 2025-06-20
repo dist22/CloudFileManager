@@ -3,7 +3,7 @@ using Cloud.DTOs;
 using Cloud.Interfaces;
 using Cloud.Models;
 
-namespace Cloud.Repository;
+namespace Cloud.Services;
 
 public class AuthServices : IAuthServices
 {
@@ -11,14 +11,16 @@ public class AuthServices : IAuthServices
     private readonly IBlobStorage _blobStorage;
     private readonly IMapper _mapper;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtProvider _jwtProvider;
 
     public AuthServices(IUserRepository userRepository, IBlobStorage blobStorage, IMapper mapper,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
     {
         _userRepository = userRepository;
         _blobStorage = blobStorage;
         _mapper = mapper;
         _passwordHasher = passwordHasher;
+        _jwtProvider = jwtProvider;
     }
 
 
@@ -39,11 +41,11 @@ public class AuthServices : IAuthServices
         throw new Exception("User already exists");
     }
 
-    public async Task<bool> LoginAsync(UserLoginDTO userLoginDto)
+    public async Task<string> LoginAsync(UserLoginDTO userLoginDto)
     {
         var user = await _userRepository.GetUser(u => u.email == userLoginDto.email);
         if (_passwordHasher.Verify(userLoginDto.password, user.password))
-            return true;
+            return _jwtProvider.CreateToken(user);
         throw new Exception("error");
     }
 

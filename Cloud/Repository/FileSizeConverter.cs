@@ -6,7 +6,7 @@ public class FileSizeConverter : IFileSizeConverter
 {
     public string FormatSize(long bytes)
     {
-        string[] sizeUnits = { "B", "KB", "MB", "GB", "TB" };
+        string[] sizeUnits = ["B", "KB", "MB", "GB", "TB"];
         double size = bytes;
         int unitIndex = 0;
 

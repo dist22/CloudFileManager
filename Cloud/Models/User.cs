@@ -20,5 +20,5 @@ public class User
     public DateTime createAt { get; set; } = DateTime.Now;
     
     public DateTime updateAt { get; set; } = DateTime.Now;
-    public List<FileRecord> files { get; set; } = new List<FileRecord>();
+    public List<FileRecord> files { get; set; } = [];
 }

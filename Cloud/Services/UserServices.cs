@@ -3,7 +3,7 @@ using Cloud.DTOs;
 using Cloud.Interfaces;
 using Cloud.Models;
 
-namespace Cloud.Repository;
+namespace Cloud.Services;
 
 public class UserServices : IUserServices
 {
@@ -32,20 +32,7 @@ public class UserServices : IUserServices
         var user = await _userRepository.GetUser(u => u.userId == userId);
         return _mapper.Map<UserDTOs>(user);
     }
-
-    // public async Task<bool> CreateUserAsync(UserCreateDTO userCreateDto)
-    // {
-    //     var exist = await _userRepository.UserExists(u => u.email == userCreateDto.email) &&
-    //                 await _userRepository.UserExists(u => u.username == userCreateDto.username);
-    //     if (exist)
-    //         throw new Exception("User already exists");
-    //     
-    //     var user = await _userRepository.AddUserAsync((_mapper.Map<User>(userCreateDto)));
-    //     user.containerName = await _blobStorage.CreateUserContainerAsync(user.userId.ToString());
-    //     
-    //     return await _userRepository.EditUser(user);
-    // }
-
+    
     public async Task<bool> EditUserAsync(int userId, UserEditDTO userEditDto)
     {
         var user = await _userRepository.GetUser(u => u.userId == userId);
