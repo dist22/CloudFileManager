@@ -21,7 +21,13 @@ public class UserController(IUserServices userServices) : ControllerBase
     {
         return await userServices.GetUserAsync(userId);
     }
-    
+
+    [HttpGet]
+    public async Task<IActionResult> TEst()
+    {
+        return Ok();
+    }
+
 
     [HttpPut("EditUser/{userId}")]
     public async Task<IActionResult> EditUserController(int userId, [FromForm]UserEditDTO userEditDto)

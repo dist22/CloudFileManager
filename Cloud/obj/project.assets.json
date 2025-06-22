@@ -4898,31 +4898,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Di_St\\.nuget\\packages\\": {},
-    "D:\\SDK\\NuGetPackages": {}
+    "C:\\Users\\ghost\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\C#\\Cloud\\Cloud\\Cloud.csproj",
+      "projectUniqueName": "C:\\Users\\ghost\\RiderProjects\\CloudFileManager\\Cloud\\Cloud.csproj",
       "projectName": "Cloud",
-      "projectPath": "D:\\C#\\Cloud\\Cloud\\Cloud.csproj",
-      "packagesPath": "C:\\Users\\Di_St\\.nuget\\packages\\",
-      "outputPath": "D:\\C#\\Cloud\\Cloud\\obj\\",
+      "projectPath": "C:\\Users\\ghost\\RiderProjects\\CloudFileManager\\Cloud\\Cloud.csproj",
+      "packagesPath": "C:\\Users\\ghost\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ghost\\RiderProjects\\CloudFileManager\\Cloud\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "D:\\SDK\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Di_St\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\ghost\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4935,7 +4928,13 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -5007,7 +5006,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\ghost\\.dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
