@@ -13,39 +13,32 @@ public class UserController(IUserServices userServices) : ControllerBase
 {
     [Authorize(Roles = "Admin")]
     [HttpGet("GetUsers")]
-    public async Task<IEnumerable<UserDTOs>> GetUsersController()
-    {
-        return await userServices.GetUsersAsync();
-    }
+    public async Task<IEnumerable<UserDTOs>> GetUsersController() 
+        => await userServices.GetUsersAsync();
 
     [Authorize(Roles = "Admin")]
     [HttpGet("GetUserById/{userId}")]
-    public async Task<UserDTOs> GetUserController(int userId)
-    {
-        return await userServices.GetUserAsync(userId);
-    }
+    public async Task<IActionResult> GetUserController(int userId)
+        => Ok(await userServices.GetUserAsync(userId));
 
     [Authorize(Roles = "Admin, User")]
     [HttpGet("GetMyUser")]
-    public async Task<UserDTOs> GetMyUserController()
+    public async Task<IActionResult> GetMyUserController()
     {
-        var userId = System.Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        return await userServices.GetUserAsync(userId);
+        var userClaimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userClaimId == null)
+            return Problem();
+        var userId = System.Convert.ToInt32(userClaimId);
+        return Ok(await userServices.GetUserAsync(userId));
     }
 
     [Authorize(Roles = "Admin")]
     [HttpPut("EditUserRole")]
     public async Task<IActionResult> EditUserRoleController([FromForm] UserEditDTO userEditDto)
-    {
-        var result = await userServices.EditUserAsync(userEditDto);
-        return result ? Ok("Successful") : Problem();
-    }
+        => await userServices.EditUserAsync(userEditDto) ? Ok("Success") : Problem();
 
     [Authorize(Roles = "Admin")]
     [HttpDelete("DeleteUser/{userId}")]
-    public async Task<IActionResult> DeleteUserController(int userId)
-    {
-        var result = await userServices.DeleteUserAsync(userId);
-        return result ? Ok("Successful") : Problem();
-    }
+    public async Task<IActionResult> DeleteUserController(int userId) 
+        => await userServices.DeleteUserAsync(userId) ? Ok("Success") : Problem();
 }
