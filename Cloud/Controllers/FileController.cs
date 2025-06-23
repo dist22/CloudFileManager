@@ -1,33 +1,45 @@
-﻿using Cloud.DTOs;
+﻿using System.Security.Claims;
+using Cloud.DTOs;
 using Cloud.Interfaces;
-using Cloud.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cloud.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 
 public class FileController(IFileServices fileServices) : ControllerBase
 {
+    [Authorize(Roles = "Admin")]
     [HttpGet("GetAllFiles")]
-    public async Task<IEnumerable<FileDTOs>> GetAllFilesController()
-    {
-        return await fileServices.GetAllFilesAsync();
-    }
+    public async Task<IEnumerable<FileDTOs>> GetAllFilesController() 
+        => await fileServices.GetAllFilesAsync();
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("GetFile/{fileId}")]
-    public async Task<FileDTOs> GetFileController(int fileId)
-    {
-        return await fileServices.GetFileByIdAsync(fileId);
-    }
+    public async Task<FileDTOs> GetFileController(int fileId) 
+        => await fileServices.GetFileByIdAsync(fileId);
 
+
+    [Authorize(Roles = "Admin")]
     [HttpGet("GetUserFiles/{userId}")]
-    public async Task<IEnumerable<FileDTOs>> GetUserFilesController(int userId)
+    public async Task<IEnumerable<FileDTOs>> GetUserFilesController(int userId) 
+        => await fileServices.GetAllUserFilesAsync(userId);
+
+    [Authorize(Roles = "Admin,User")]
+    [HttpGet("GetMyFiles")]
+    public async Task<IEnumerable<FileDTOs>> GetMyFilesController()
     {
+        var userClaimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userClaimId == null)
+            throw new UnauthorizedAccessException();
+        var userId = System.Convert.ToInt32(userClaimId);
         return await fileServices.GetAllUserFilesAsync(userId);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("Download/{fileId}")]
     public async Task<IActionResult> DownloadFileController(int fileId)
     {
@@ -35,18 +47,20 @@ public class FileController(IFileServices fileServices) : ControllerBase
         return stream == null ? NotFound() : File(stream, "application/octet-stream", fileName);
     }
 
-    [HttpPost("Upload/{id}")]
-    public async Task<string> UploadFileController(int id,IFormFile file)
+    [Authorize(Roles = "Admin,User")]
+    [HttpPost("Upload")]
+    public async Task<string> UploadFileController(IFormFile file)
     {
-        return await fileServices.UploadFileAsync(id, file);
+        var userClaimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userClaimId == null)
+            throw new UnauthorizedAccessException();
+        var userId = System.Convert.ToInt32(userClaimId);
+        return await fileServices.UploadFileAsync(userId, file);
     }
-
-
+    
+    [Authorize(Roles = "Admin")]
     [HttpDelete("Delete/{fileId}")]
     public async Task<IActionResult> DeleteFileController(int fileId)
-    {
-        var result = await fileServices.DeleteFileAsync(fileId);
-        return result ? Ok("Success") : NotFound("File with this id not found");
-    }
+        => await fileServices.DeleteFileAsync(fileId) ? Ok("Success") : NotFound();
 
 }
