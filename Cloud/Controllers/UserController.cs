@@ -26,7 +26,7 @@ public class UserController(IUserServices userServices) : ControllerBase
     }
 
     [Authorize(Roles = "Admin, User")]
-    [HttpPut("GetMyUser")]
+    [HttpGet("GetMyUser")]
     public async Task<UserDTOs> GetMyUserController()
     {
         var userId = System.Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -46,6 +46,6 @@ public class UserController(IUserServices userServices) : ControllerBase
     public async Task<IActionResult> DeleteUserController(int userId)
     {
         var result = await userServices.DeleteUserAsync(userId);
-        return result ? Ok("Successful") : Conflict();
+        return result ? Ok("Successful") : Problem();
     }
 }
