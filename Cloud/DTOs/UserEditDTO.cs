@@ -2,7 +2,6 @@
 
 public class UserEditDTO
 {
-    public string username { get; set; } = string.Empty;
-    public string email { get; set; } = string.Empty;
+    public int userId { get; set; }
     public string role { get; set; } = string.Empty;
 }

@@ -33,11 +33,9 @@ public class UserServices : IUserServices
         return _mapper.Map<UserDTOs>(user);
     }
     
-    public async Task<bool> EditUserAsync(int userId, UserEditDTO userEditDto)
+    public async Task<bool> EditUserAsync(UserEditDTO userEditDto)
     {
-        var user = await _userRepository.GetUser(u => u.userId == userId);
-        user.username = userEditDto.username;
-        user.email = userEditDto.email;
+        var user = await _userRepository.GetUser(u => u.userId == userEditDto.userId);
         user.role = userEditDto.role;
         user.updateAt = DateTime.Now;
         return await _userRepository.EditUser(user);

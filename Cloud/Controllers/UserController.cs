@@ -1,4 +1,5 @@
-﻿using Cloud.Interfaces;
+﻿using System.Security.Claims;
+using Cloud.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Cloud.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ namespace Cloud.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class UserController(IUserServices userServices) : ControllerBase
 {
     [Authorize(Roles = "Admin")]
@@ -16,19 +18,30 @@ public class UserController(IUserServices userServices) : ControllerBase
         return await userServices.GetUsersAsync();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("GetUserById/{userId}")]
     public async Task<UserDTOs> GetUserController(int userId)
     {
         return await userServices.GetUserAsync(userId);
     }
 
-    [HttpPut("EditUser/{userId}")]
-    public async Task<IActionResult> EditUserController(int userId, [FromForm]UserEditDTO userEditDto)
+    [Authorize(Roles = "Admin, User")]
+    [HttpPut("GetMyUser")]
+    public async Task<UserDTOs> GetMyUserController()
     {
-        var result = await userServices.EditUserAsync(userId, userEditDto);
+        var userId = System.Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        return await userServices.GetUserAsync(userId);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("EditUserRole")]
+    public async Task<IActionResult> EditUserRoleController([FromForm] UserEditDTO userEditDto)
+    {
+        var result = await userServices.EditUserAsync(userEditDto);
         return result ? Ok("Successful") : Problem();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("DeleteUser/{userId}")]
     public async Task<IActionResult> DeleteUserController(int userId)
     {
