@@ -19,5 +19,7 @@ public interface IFileServices
     public Task<IEnumerable<FileDTOs>> GetAllFilesAsync();
 
     public Task<(Stream?, string fileName)?> DownloadFileAsync(int fileId);
+    
+    public Task<(Stream?, string fileName)?> DownloadMyFileAsync(int userId, int fileId);
 
 }

@@ -17,22 +17,24 @@ public class FileRepository(DataContextEF entity) : BaseRepository<FileRecord>(e
             throw new Exception("Error");
     }
 
-    public async Task<IEnumerable<FileRecord>> GetFilesAsync()
-    {
-        return await _dbSet
+    public async Task<IEnumerable<FileRecord>> GetFilesAsync() 
+        => await _dbSet
             .AsNoTracking()
             .ToListAsync();
-    }
 
-    public async Task<FileRecord?> GetFileAsync(int id)
-    {
-        return await _dbSet
+    public async Task<FileRecord?> GetFileAsync(int id) 
+        => await _dbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(f => f.fileId == id);
+
+    public async Task<FileRecord> GetFileIfExistAsync(int fileId)
+    {
+        var file = await GetFileAsync(fileId);
+        if(file == null)
+            throw new FileNotFoundException("File not found");
+        return file;
     }
 
-    public async Task<bool> DeleteFileAsync(FileRecord file)
-    {
-        return await Remove(file) ? true : throw new Exception("Error");
-    }
+    public async Task<bool> DeleteFileAsync(FileRecord file) 
+        => await Remove(file) ? true : throw new Exception("Error");
 }

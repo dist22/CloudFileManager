@@ -29,13 +29,13 @@ public class UserServices : IUserServices
 
     public async Task<UserDTOs> GetUserAsync(int userId)
     {
-        var user = await _userRepository.GetUser(u => u.userId == userId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userId);
         return _mapper.Map<UserDTOs>(user);
     }
     
     public async Task<bool> EditUserAsync(UserEditDTO userEditDto)
     {
-        var user = await _userRepository.GetUser(u => u.userId == userEditDto.userId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userEditDto.userId);
         user.role = userEditDto.role;
         user.updateAt = DateTime.Now;
         return await _userRepository.EditUser(user);
@@ -43,7 +43,7 @@ public class UserServices : IUserServices
 
     public async Task<bool> DeleteUserAsync(int userId)
     {
-        var user = await _userRepository.GetUser(u => u.userId ==userId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId ==userId);
         foreach (var file in user.files.ToList())
         {
             await _fileRepository.DeleteFileAsync(file);

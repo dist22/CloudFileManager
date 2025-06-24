@@ -43,7 +43,7 @@ public class AuthServices : IAuthServices
 
     public async Task<string> LoginAsync(UserLoginDTO userLoginDto)
     {
-        var user = await _userRepository.GetUser(u => u.email == userLoginDto.email);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.email == userLoginDto.email);
         if (_passwordHasher.Verify(userLoginDto.password, user.password))
             return _jwtProvider.CreateToken(user);
         throw new Exception("error");

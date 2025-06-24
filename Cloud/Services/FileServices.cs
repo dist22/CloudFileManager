@@ -28,18 +28,16 @@ public class FileServices : IFileServices
 
     public async Task<string> UploadFileAsync(int userId, IFormFile file)
     {
-        var user = await _userRepository.GetUser(u => u.userId == userId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userId);
 
         var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
         var extension = Path.GetExtension(file.FileName);
         var uniqueFileName = $"{originalFileName}_{Guid.NewGuid()}{extension}";
-
-        var fileUrl = await _blobStorage.UploadAsync(uniqueFileName, file, user);
-
+        
         var fileRecord = new FileRecord
         {
             fileName = uniqueFileName,
-            filePath = fileUrl,
+            filePath = await _blobStorage.UploadAsync(uniqueFileName, file, user),
             fileSize = _fileSizeConverter.FormatSize(file.Length),
             fileType = file.ContentType,
             userId = user.userId
@@ -49,30 +47,22 @@ public class FileServices : IFileServices
         user.files.Add(fileRecord);
         await _userRepository.EditUser(user);
 
-        return fileUrl;
+        return fileRecord.filePath;
     }
 
     public async Task<bool> DeleteAnyFileAsync(int fileId)
     {
-        var file = await _fileRepository.GetFileAsync(fileId);
-        var user = await _userRepository.GetUser(u => u.userId == file.userId);
-
-        var resultAzure = await _blobStorage.DeleteAsync(file, user);
-
-        var resultFile = await _fileRepository.DeleteFileAsync(file);
-
-        return resultFile && resultAzure;
+        var file = await _fileRepository.GetFileIfExistAsync(fileId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == file.userId);
+        
+        return await _blobStorage.DeleteAsync(file, user) 
+               && await _fileRepository.DeleteFileAsync(file);
     }
 
     public async Task<bool> DeleteUserFileAsync(int userId, int fileId)
     {
-       var file = await _fileRepository.GetFileAsync(fileId);
-       if (file == null)
-           return false;
-       
-       var user = await _userRepository.GetUser(u => u.userId == userId);
-       if (user == null)
-           return false;
+       var file = await _fileRepository.GetFileIfExistAsync(fileId);
+       var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userId);
        
        if (file.userId != userId)
            return false;
@@ -81,11 +71,9 @@ public class FileServices : IFileServices
               && await _blobStorage.DeleteAsync(file, user);
     }
 
-    public async Task<FileDTOs> GetFileByIdAsync(int fileId)
-    {
-        var file = await _fileRepository.GetFileAsync(fileId);
-        return _mapper.Map<FileDTOs>(file);
-    }
+    public async Task<FileDTOs> GetFileByIdAsync(int fileId) 
+        => _mapper.Map<FileDTOs>(await _fileRepository.GetFileIfExistAsync(fileId));
+
 
     public async Task<IEnumerable<FileDTOs>> GetAllUserFilesAsync(int userId)
     {
@@ -102,9 +90,20 @@ public class FileServices : IFileServices
 
     public async Task<(Stream?, string fileName)?> DownloadFileAsync(int fileId)
     {
-        var file = await _fileRepository.GetFileAsync(fileId);
-        var user = await _userRepository.GetUser(u => u.userId == file.userId);
-        var stream = await _blobStorage.DownloadAsync(file, user);
-        return (stream, file.fileName);
+        var file = await _fileRepository.GetFileIfExistAsync(fileId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == file.userId);
+        
+        return (await _blobStorage.DownloadAsync(file, user), file.fileName);
+    }
+
+    public async Task<(Stream?, string fileName)?> DownloadMyFileAsync(int userId, int fileId)
+    {
+        var file = await _fileRepository.GetFileIfExistAsync(fileId);
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userId);
+      
+        if (file.userId != userId)
+            throw new UnauthorizedAccessException();
+
+        return (await _blobStorage.DownloadAsync(file, user), file.fileName);
     }
 }
