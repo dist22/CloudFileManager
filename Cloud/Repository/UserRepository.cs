@@ -15,13 +15,12 @@ public class UserRepository(DataContextEF entity) : BaseRepository<User>(entity)
             .ToListAsync();
     }
 
-    public async Task<User> GetUser(Expression<Func<User, bool>> expression)
+    public async Task<User?> GetUser(Expression<Func<User, bool>> expression)
     {
         return await _dbSet
-                            .AsNoTracking()
-                            .Include(u => u.files)
-                            .FirstOrDefaultAsync(expression) ??
-                        throw new Exception("Error");
+            .AsNoTracking()
+            .Include(u => u.files)
+            .FirstOrDefaultAsync(expression);
     }
 
     public async Task<bool> EditUser(User user)

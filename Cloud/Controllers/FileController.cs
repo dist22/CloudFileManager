@@ -61,6 +61,17 @@ public class FileController(IFileServices fileServices) : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete("Delete/{fileId}")]
     public async Task<IActionResult> DeleteFileController(int fileId)
-        => await fileServices.DeleteFileAsync(fileId) ? Ok("Success") : NotFound();
+        => await fileServices.DeleteAnyFileAsync(fileId) ? Ok("Success") : NotFound();
+
+    [Authorize(Roles = "Admin, User")]
+    [HttpDelete("DeleteMyFile/{fileid}")]
+    public async Task<IActionResult> DeleteMyFileController(int fileId)
+    {
+        var userClaimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userClaimId == null)
+            throw new UnauthorizedAccessException();
+        var userId = System.Convert.ToInt32(userClaimId);
+        return await fileServices.DeleteUserFileAsync(userId, fileId) ? Ok("Success") : NotFound();
+    }
 
 }
