@@ -28,8 +28,7 @@ public class FileRepository(DataContextEF entity) : BaseRepository<FileRecord>(e
     {
         return await _dbSet
             .AsNoTracking()
-            .FirstOrDefaultAsync(f => f.fileId == id) ?? 
-               throw new Exception("File with this id not found");
+            .FirstOrDefaultAsync(f => f.fileId == id);
     }
 
     public async Task<bool> DeleteFileAsync(FileRecord file)
