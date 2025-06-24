@@ -57,10 +57,17 @@ public class FileController(IFileServices fileServices) : ControllerBase
         var userId = System.Convert.ToInt32(userClaimId);
         return await fileServices.UploadFileAsync(userId, file);
     }
-    
-    [Authorize(Roles = "Admin")]
+
+
+    [Authorize(Roles = "Admin,User")]
     [HttpDelete("Delete/{fileId}")]
     public async Task<IActionResult> DeleteFileController(int fileId)
-        => await fileServices.DeleteFileAsync(fileId) ? Ok("Success") : NotFound();
+    {
+        var userClaimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userClaimId == null)
+            throw new UnauthorizedAccessException();
+        var userId = System.Convert.ToInt32(userClaimId);
+        return await fileServices.DeleteFileAsync(userId, fileId) ? Ok("Success") : Forbid();
+    }
 
 }

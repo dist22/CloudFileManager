@@ -38,7 +38,7 @@ public class BlobStorage : IBlobStorage
         return blobClient.Uri.ToString();
     }
 
-    public async Task<bool> DeleteAsync(FileRecord file, User user)
+    public async Task<bool> DeleteAsync(FileRecord file, User? user)
     {
         var blobClient = _client.GetBlobContainerClient(user.containerName).GetBlobClient(file.fileName);
         return await blobClient.DeleteIfExistsAsync();

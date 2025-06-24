@@ -8,7 +8,7 @@ public interface IFileServices
 {
     public Task<string> UploadFileAsync(int userId, IFormFile file);
 
-    public Task<bool> DeleteFileAsync(int fileId);
+    public Task<bool> DeleteFileAsync(int userId,int fileId);
 
     public Task<FileDTOs> GetFileByIdAsync(int fileId);
 

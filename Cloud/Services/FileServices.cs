@@ -52,16 +52,25 @@ public class FileServices : IFileServices
         return fileUrl;
     }
 
-    public async Task<bool> DeleteFileAsync(int fileId)
+    public async Task<bool> DeleteFileAsync(int userId,int fileId)
     {
         var file = await _fileRepository.GetFileAsync(fileId);
-        var user = await _userRepository.GetUser(u => u.userId == file.userId);
-
-        var resultAzure = await _blobStorage.DeleteAsync(file, user);
-
-        var resultFile = await _fileRepository.DeleteFileAsync(file);
-
-        return resultFile && resultAzure;
+        if(file == null)
+            return false;
+        
+        var fileOwner = await _userRepository.GetUser(u => u.userId == userId);
+        if(fileOwner == null)
+            return false;
+        
+        if (fileOwner.role == "Admin")
+            fileOwner = await _userRepository.GetUser(u => u.userId == file.userId);
+        else
+        {
+            if (fileOwner.userId != file.userId)
+                return false;
+        }
+        return await _blobStorage.DeleteAsync(file, fileOwner) 
+               && await _fileRepository.DeleteFileAsync(file);
     }
 
     public async Task<FileDTOs> GetFileByIdAsync(int fileId)
