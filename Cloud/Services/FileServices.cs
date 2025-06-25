@@ -74,6 +74,14 @@ public class FileServices : IFileServices
     public async Task<FileDTOs> GetFileByIdAsync(int fileId) 
         => _mapper.Map<FileDTOs>(await _fileRepository.GetFileIfExistAsync(fileId));
 
+    public async Task<FileDTOs> GetMyFileAsync(int fileId, int fileOwnerId)
+    {
+        var file = await _fileRepository.GetFileIfExistAsync(fileId);
+        if (file.userId != fileOwnerId)
+            throw new UnauthorizedAccessException();
+        return _mapper.Map<FileDTOs>(file);
+    }
+
 
     public async Task<IEnumerable<FileDTOs>> GetAllUserFilesAsync(int userId)
     {

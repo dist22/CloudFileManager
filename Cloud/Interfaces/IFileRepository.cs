@@ -8,7 +8,7 @@ public interface IFileRepository
 
     public Task<IEnumerable<FileRecord>> GetFilesAsync();
 
-    protected internal Task<FileRecord?> GetFileAsync(int id);
+    protected Task<FileRecord?> GetFileAsync(int id);
 
     public Task<FileRecord> GetFileIfExistAsync(int id);
     

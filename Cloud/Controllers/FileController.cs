@@ -29,6 +29,11 @@ public class FileController(IFileServices fileServices) : ControllerBase
     public async Task<IEnumerable<FileDTOs>> GetUserFilesController(int userId) 
         => await fileServices.GetAllUserFilesAsync(userId);
 
+    [Authorize(Roles = "Admin, User")]
+    [HttpGet("GetMyFile/{fileId}")]
+    public async Task<IActionResult> GetMyFileController(int fileId)
+        => Ok(await fileServices.GetMyFileAsync(fileId, this.GetUserId()));
+
     [Authorize(Roles = "Admin,User")]
     [HttpGet("GetMyFiles")]
     public async Task<IEnumerable<FileDTOs>> GetMyFilesController() 
@@ -61,9 +66,8 @@ public class FileController(IFileServices fileServices) : ControllerBase
         => await fileServices.DeleteAnyFileAsync(fileId) ? Ok("Success") : NotFound();
 
     [Authorize(Roles = "Admin, User")]
-    [HttpDelete("DeleteMyFile/{fileid}")]
+    [HttpDelete("DeleteMyFile/{fileId}")]
     public async Task<IActionResult> DeleteMyFileController(int fileId) 
         => await fileServices.DeleteUserFileAsync(this.GetUserId(), fileId) ?
             Ok("Success") : NotFound();
-
 }

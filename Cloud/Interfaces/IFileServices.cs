@@ -14,6 +14,8 @@ public interface IFileServices
 
     public Task<FileDTOs> GetFileByIdAsync(int fileId);
 
+    public Task<FileDTOs> GetMyFileAsync(int fileId, int fileOwnerId);
+
     public Task<IEnumerable<FileDTOs>> GetAllUserFilesAsync(int userId);
 
     public Task<IEnumerable<FileDTOs>> GetAllFilesAsync();
