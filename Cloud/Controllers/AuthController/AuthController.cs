@@ -1,11 +1,13 @@
 ﻿using Cloud.DTOs;
 using Cloud.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cloud.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[AllowAnonymous]
+[Route("api/auth")]
 public class AuthController(IAuthServices authServices) : ControllerBase
 {
     [HttpPost("Reg")]
