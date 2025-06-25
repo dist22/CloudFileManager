@@ -1,20 +1,21 @@
 ﻿using Cloud.DTOs;
-using Cloud.Interfaces;
+using Cloud.DTOs.User;
+using Cloud.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cloud.Controllers;
+namespace Cloud.Controllers.AuthController;
 
 [ApiController]
 [AllowAnonymous]
 [Route("api/auth")]
 public class AuthController(IAuthServices authServices) : ControllerBase
 {
-    [HttpPost("Reg")]
+    [HttpPost("reg")]
     public async Task<IActionResult> RegUserController([FromForm] UserCreateDTO userCreateDto)
         => await authServices.RegisteredAsync(userCreateDto) ? Ok("Successful") : Conflict();
 
-    [HttpPost("Login")]
+    [HttpPost("log")]
     public async Task<IActionResult> LoginController([FromForm] UserLoginDTO userLoginDto)
     {
         var token = await authServices.LoginAsync(userLoginDto);

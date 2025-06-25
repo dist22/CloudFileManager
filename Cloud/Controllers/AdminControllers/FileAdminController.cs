@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Cloud.DTOs;
-using Cloud.Interfaces;
+using Cloud.DTOs.File;
+using Cloud.Interfaces.Services;
+
 namespace Cloud.Controllers.AdminControllers;
 
 [ApiController]
@@ -11,27 +12,27 @@ namespace Cloud.Controllers.AdminControllers;
 public class FileAdminController(IFileServices fileServices) : ControllerBase
 {
     
-    [HttpGet("GetAllFiles")]
+    [HttpGet]
     public async Task<IEnumerable<FileDTOs>> GetAllFilesController() 
         => await fileServices.GetAllFilesAsync();
     
-    [HttpGet("GetFile/{fileId}")]
+    [HttpGet("{fileId}")]
     public async Task<FileDTOs> GetFileController(int fileId) 
         => await fileServices.GetFileByIdAsync(fileId);
     
-    [HttpGet("GetUserFiles/{userId}")]
+    [HttpGet("{userId}")]
     public async Task<IEnumerable<FileDTOs>> GetUserFilesController(int userId)
         => await fileServices.GetAllUserFilesAsync(userId);
 
     
-    [HttpGet("Download/{fileId}")]
+    [HttpGet("{fileId}/download")]
     public async Task<IActionResult> DownloadFileController(int fileId)
     {
         var (stream, fileName) = (await fileServices.DownloadFileAsync(fileId)).Value;
         return stream == null ? NotFound() : File(stream, "application/octet-stream", fileName);
     }
     
-    [HttpDelete("Delete/{fileId}")]
+    [HttpDelete("{fileId}")]
     public async Task<IActionResult> DeleteFileController(int fileId)
         => await fileServices.DeleteAnyFileAsync(fileId) ? Ok("Success") : NotFound();
     

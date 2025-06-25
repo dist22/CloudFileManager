@@ -1,4 +1,4 @@
-﻿namespace Cloud.Interfaces;
+﻿namespace Cloud.Interfaces.FileSizeConverter;
 
 public interface IFileSizeConverter
 {

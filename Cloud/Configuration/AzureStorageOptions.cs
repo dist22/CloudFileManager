@@ -1,5 +1,4 @@
-﻿using Azure.Storage.Blobs;
-
+﻿
 namespace Cloud.Configuration;
 
 public class AzureStorageOptions

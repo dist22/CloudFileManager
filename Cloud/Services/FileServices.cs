@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using Cloud.Interfaces;
 using Cloud.Models;
-using Cloud.DTOs;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using Cloud.DTOs.File;
+using Cloud.Interfaces.BlobStorage;
+using Cloud.Interfaces.FileSizeConverter;
+using Cloud.Interfaces.Repositoryes;
+using Cloud.Interfaces.Services;
 
 namespace Cloud.Services;
 

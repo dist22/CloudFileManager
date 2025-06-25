@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using Cloud.Data;
-using Cloud.Interfaces;
+﻿using Cloud.Data;
 using Cloud.Models;
-using Cloud.DTOs;
-using Microsoft.AspNetCore.Mvc;
+using Cloud.Interfaces.Repositoryes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cloud.Repository;

@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
-using Cloud.DTOs;
+using Cloud.DTOs.User;
 using Cloud.Interfaces;
+using Cloud.Interfaces.BlobStorage;
+using Cloud.Interfaces.PasswordHasher;
+using Cloud.Interfaces.Repositoryes;
+using Cloud.Interfaces.Services;
 using Cloud.Models;
 
 namespace Cloud.Services;

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using Cloud.DTOs;
-using Cloud.Interfaces;
-using Cloud.Models;
+using Cloud.DTOs.User;
+using Cloud.Interfaces.BlobStorage;
+using Cloud.Interfaces.Repositoryes;
+using Cloud.Interfaces.Services;
 
 namespace Cloud.Services;
 
@@ -33,10 +34,10 @@ public class UserServices : IUserServices
         return _mapper.Map<UserDTOs>(user);
     }
     
-    public async Task<bool> EditUserAsync(UserEditDTO userEditDto)
+    public async Task<bool> EditUserAsync(int userId, string role)
     {
-        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userEditDto.userId);
-        user.role = userEditDto.role;
+        var user = await _userRepository.GetUserIfExistAsync(u => u.userId == userId);
+        user.role = role;
         user.updateAt = DateTime.Now;
         return await _userRepository.EditUser(user);
     }

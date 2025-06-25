@@ -1,6 +1,6 @@
-﻿using Cloud.Interfaces;
+﻿using Cloud.Interfaces.FileSizeConverter;
 
-namespace Cloud.Repository;
+namespace Cloud.FileSizeConverter;
 
 public class FileSizeConverter : IFileSizeConverter
 {

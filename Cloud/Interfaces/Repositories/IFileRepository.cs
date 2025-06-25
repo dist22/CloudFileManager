@@ -1,6 +1,6 @@
 ﻿using Cloud.Models;
 
-namespace Cloud.Interfaces;
+namespace Cloud.Interfaces.Repositoryes;
 
 public interface IFileRepository
 {

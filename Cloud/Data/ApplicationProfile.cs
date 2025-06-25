@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Cloud.DTOs;
+using Cloud.DTOs.File;
+using Cloud.DTOs.User;
 using Cloud.Models;
 
 namespace Cloud.Data;

@@ -1,4 +1,4 @@
-﻿namespace Cloud.DTOs;
+﻿namespace Cloud.DTOs.File;
 
 public class FileDTOs
 {

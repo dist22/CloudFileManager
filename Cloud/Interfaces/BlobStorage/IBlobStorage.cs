@@ -1,6 +1,6 @@
 ﻿using Cloud.Models;
 
-namespace Cloud.Interfaces;
+namespace Cloud.Interfaces.BlobStorage;
 public interface IBlobStorage
 {
     public Task<string> CreateUserContainerAsync(string userId);

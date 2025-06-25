@@ -1,4 +1,4 @@
-﻿using Cloud.Interfaces;
+﻿using Cloud.Interfaces.PasswordHasher;
 
 namespace Cloud.Repository;
 

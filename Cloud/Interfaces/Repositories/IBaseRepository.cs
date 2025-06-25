@@ -1,4 +1,4 @@
-﻿namespace Cloud.Interfaces;
+﻿namespace Cloud.Interfaces.Repositories;
 
 public interface IBaseRepository<T> where T : class
 {

@@ -1,4 +1,4 @@
-﻿namespace Cloud.DTOs;
+﻿namespace Cloud.DTOs.User;
 
 public class UserCreateDTO
 {

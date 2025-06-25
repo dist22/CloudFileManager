@@ -3,6 +3,7 @@ using Cloud.Models;
 using Microsoft.AspNetCore.Mvc;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Cloud.Interfaces.BlobStorage;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Cloud.Repository;

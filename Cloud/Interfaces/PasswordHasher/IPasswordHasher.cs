@@ -1,4 +1,4 @@
-﻿namespace Cloud.Interfaces;
+﻿namespace Cloud.Interfaces.PasswordHasher;
 
 public interface IPasswordHasher
 {

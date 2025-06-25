@@ -1,8 +1,7 @@
 ﻿using Cloud.DTOs;
-using Cloud.Models;
-using Microsoft.AspNetCore.Mvc;
+using Cloud.DTOs.File;
 
-namespace Cloud.Interfaces;
+namespace Cloud.Interfaces.Services;
 
 public interface IFileServices
 {

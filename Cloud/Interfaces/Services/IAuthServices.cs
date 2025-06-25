@@ -1,6 +1,7 @@
 ﻿using Cloud.DTOs;
+using Cloud.DTOs.User;
 
-namespace Cloud.Interfaces;
+namespace Cloud.Interfaces.Services;
 
 public interface IAuthServices
 {

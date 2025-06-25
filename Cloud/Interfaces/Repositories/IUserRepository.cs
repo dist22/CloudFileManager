@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Cloud.Models;
 
-namespace Cloud.Interfaces;
+namespace Cloud.Interfaces.Repositoryes;
 
 public interface IUserRepository
 {
