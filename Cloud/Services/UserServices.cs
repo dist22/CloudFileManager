@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Cloud.DTOs.User;
+using Cloud.Exceptions;
 using Cloud.Interfaces.BlobStorage;
 using Cloud.Interfaces.Repositoryes;
 using Cloud.Interfaces.Services;
