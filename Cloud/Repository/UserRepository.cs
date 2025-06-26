@@ -9,14 +9,13 @@ namespace Cloud.Repository;
 public class UserRepository(DataContextEF entity) : BaseRepository<User>(entity), IUserRepository
 {
     public async Task<IEnumerable<User>> GetUsers() 
-        => await _dbSet
+        => await dbSet
             .AsNoTracking()
             .ToListAsync();
 
     public async Task<User?> GetUser(Expression<Func<User, bool>> expression) 
-        => await _dbSet
+        => await dbSet
             .AsNoTracking()
-            .Include(u => u.files)
             .FirstOrDefaultAsync(expression);
 
     public async Task<User> GetUserIfExistAsync(Expression<Func<User, bool>> expression)
@@ -32,12 +31,12 @@ public class UserRepository(DataContextEF entity) : BaseRepository<User>(entity)
 
     public async Task<User> AddUserAsync(User user)
     {
-        var result = await _dbSet.AddAsync(user);
+        var result = await dbSet.AddAsync(user);
         return await SaveChangesAsync() ? result.Entity : null;
     }
 
     public async Task<bool> UserExists(Expression<Func<User, bool>> predicate) 
-        => await _dbSet
+        => await dbSet
             .AsNoTracking()
             .AnyAsync(predicate);
 

@@ -7,7 +7,7 @@ namespace Cloud.Controllers.AdminControllers;
 
 [ApiController]
 [Authorize(Roles = "Admin")]
-[Route("api/admin/file")]
+[Route("api/admin/files")]
 
 public class FileAdminController(IFileServices fileServices) : ControllerBase
 {
@@ -16,11 +16,11 @@ public class FileAdminController(IFileServices fileServices) : ControllerBase
     public async Task<IEnumerable<FileDTOs>> GetAllFilesController() 
         => await fileServices.GetAllFilesAsync();
     
-    [HttpGet("{fileId}")]
+    [HttpGet("file/{fileId}")]
     public async Task<FileDTOs> GetFileController(int fileId) 
         => await fileServices.GetFileByIdAsync(fileId);
     
-    [HttpGet("{userId}")]
+    [HttpGet("user-files/{userId}")]
     public async Task<IEnumerable<FileDTOs>> GetUserFilesController(int userId)
         => await fileServices.GetAllUserFilesAsync(userId);
 

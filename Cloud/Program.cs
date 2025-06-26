@@ -14,6 +14,7 @@ using Cloud.Interfaces.Services;
 using Cloud.Jwt;
 using Cloud.JwtProvider;
 using Cloud.Services;
+using Cloud.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -117,6 +118,8 @@ else
 {
     app.UseHttpsRedirection();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

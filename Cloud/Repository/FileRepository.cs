@@ -9,18 +9,18 @@ public class FileRepository(DataContextEF entity) : BaseRepository<FileRecord>(e
 {
     public async Task AddFileAsync(FileRecord file)
     {
-        await _dbSet.AddAsync(file);
+        await dbSet.AddAsync(file);
         if (!await SaveChangesAsync())
             throw new Exception("Error");
     }
 
     public async Task<IEnumerable<FileRecord>> GetFilesAsync() 
-        => await _dbSet
+        => await dbSet
             .AsNoTracking()
             .ToListAsync();
 
     public async Task<FileRecord?> GetFileAsync(int id) 
-        => await _dbSet
+        => await dbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(f => f.fileId == id);
 
