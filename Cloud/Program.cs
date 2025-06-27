@@ -92,8 +92,6 @@ builder.Services.AddSingleton(sp =>
 
 
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IBlobStorage, BlobStorage>();
 builder.Services.AddScoped<IFileServices, FileServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
