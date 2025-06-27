@@ -9,7 +9,6 @@ using Cloud.Interfaces.BlobStorage;
 using Cloud.Interfaces.FileSizeConverter;
 using Cloud.Interfaces.PasswordHasher;
 using Cloud.Interfaces.Repositories;
-using Cloud.Interfaces.Repositoryes;
 using Cloud.Interfaces.Services;
 using Cloud.Jwt;
 using Cloud.JwtProvider;

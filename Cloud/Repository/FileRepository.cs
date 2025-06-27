@@ -1,6 +1,6 @@
 ﻿using Cloud.Data;
+using Cloud.Interfaces.Repositories;
 using Cloud.Models;
-using Cloud.Interfaces.Repositoryes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cloud.Repository;

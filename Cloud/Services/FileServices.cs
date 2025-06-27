@@ -3,7 +3,7 @@ using Cloud.Models;
 using Cloud.DTOs.File;
 using Cloud.Interfaces.BlobStorage;
 using Cloud.Interfaces.FileSizeConverter;
-using Cloud.Interfaces.Repositoryes;
+using Cloud.Interfaces.Repositories;
 using Cloud.Interfaces.Services;
 
 namespace Cloud.Services;

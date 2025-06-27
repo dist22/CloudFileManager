@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Cloud.Data;
-using Cloud.Interfaces.Repositoryes;
+using Cloud.Interfaces.Repositories;
 using Cloud.Models;
 using Microsoft.EntityFrameworkCore;
 
