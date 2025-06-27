@@ -9,22 +9,22 @@ using Cloud.Models;
 
 namespace Cloud.Services;
 
-public class AuthServices : IAuthServices
+public class AuthServices : BaseServices, IAuthServices
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IBaseRepository<User> _userRepository;
     private readonly IBlobStorage _blobStorage;
     private readonly IMapper _mapper;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
 
-    public AuthServices(IUserRepository userRepository, IBlobStorage blobStorage, IMapper mapper,
-        IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
+    public AuthServices(IBlobStorage blobStorage, IMapper mapper, IPasswordHasher passwordHasher,
+        IJwtProvider jwtProvider, IBaseRepository<User> userRepository)
     {
-        _userRepository = userRepository;
         _blobStorage = blobStorage;
         _mapper = mapper;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
+        _userRepository = userRepository;
     }
 
 
@@ -34,20 +34,21 @@ public class AuthServices : IAuthServices
         {
             if (await PasswordConfirmAsync(userCreateDto.password, userCreateDto.passwordConfirm))
             {
-                var user = await _userRepository.AddUserAsync((_mapper.Map<User>(userCreateDto)));
+                var user = await _userRepository.AddAsync(_mapper.Map<User>(userCreateDto));
                 user.containerName = await _blobStorage.CreateUserContainerAsync(user.userId.ToString());
                 user.password = _passwordHasher.Generate(userCreateDto.password);
-                return await _userRepository.EditUser(user);
+                return await _userRepository.Update(user);
             }
 
             throw new Exception("Password don`t match");
         }
+
         throw new Exception("User already exists");
     }
 
     public async Task<string> LoginAsync(UserLoginDTO userLoginDto)
     {
-        var user = await _userRepository.GetUserIfExistAsync(u => u.email == userLoginDto.email);
+        var user = await GetIfNotNullAsync(_userRepository.GetAsync(u => u.email == userLoginDto.email));
         if (_passwordHasher.Verify(userLoginDto.password, user.password))
             return _jwtProvider.CreateToken(user);
         throw new Exception("error");
@@ -57,6 +58,6 @@ public class AuthServices : IAuthServices
         => Task.FromResult(password == passwordConfirm);
 
     public async Task<bool> IfExistAsync(string email, string username)
-        => await _userRepository.UserExists(u => u.email == email) &&
-           await _userRepository.UserExists(u => u.email == username);
+        => await _userRepository.IfExistAsync(u => u.email == email) &&
+           await _userRepository.IfExistAsync(u => u.email == username);
 }
