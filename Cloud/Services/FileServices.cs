@@ -19,8 +19,6 @@ public class FileServices : IFileServices
     public FileServices(IUserRepository userRepository, IFileRepository fileRepository, IMapper mapper,
         IBlobStorage blobStorage, IFileSizeConverter fileSizeConverter)
     {
-        _userRepository = userRepository;
-        _fileRepository = fileRepository;
         _mapper = mapper;
         _blobStorage = blobStorage;
         _fileSizeConverter = fileSizeConverter;
