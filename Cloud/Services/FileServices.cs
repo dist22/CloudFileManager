@@ -115,4 +115,23 @@ public class FileServices : BaseServices, IFileServices
 
         return (await _blobStorage.DownloadAsync(file, user), file.fileName);
     }
+
+    public async Task<(FileRecord file, User user)> GetFileWithUserAsync(int fileId)
+    {
+        var file = await GetIfNotNullAsync(_fileRepository.GetAsync(f => f.fileId == fileId));
+        var user = await GetIfNotNullAsync(_userRepository.GetAsync(u => u.userId == file.userId));
+
+        return (file, user);
+    }
+
+    public async Task<(FileRecord file, User user)> GetValidatedFileAccess(int fileId, int fileOwnerId)
+    {
+        var file = await GetIfNotNullAsync(_fileRepository.GetAsync(f => f.fileId == fileId));
+        
+        if (file.userId != fileOwnerId)
+            throw new UnauthorizedAccessException();
+        
+        var user = await GetIfNotNullAsync(_userRepository.GetAsync(u => u.userId == fileOwnerId));
+        return (file, user);
+    }
 }
