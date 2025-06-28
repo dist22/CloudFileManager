@@ -23,4 +23,8 @@ public interface IFileServices
     
     public Task<(Stream?, string fileName)?> DownloadMyFileAsync(int userId, int fileId);
 
+    protected Task<(FileRecord file, User user)> GetFileWithUserAsync(int fileId);
+    
+    protected Task<(FileRecord file, User user)> GetValidatedFileAccess(int fileId, int fileOwnerId);
+
 }
