@@ -16,14 +16,8 @@ public class UserController(IUserServices userServices) : ControllerBase
 
     [HttpGet("me")]
     public async Task<IActionResult> GetMyUserController()
-    {
-        var userClaimId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userClaimId == null)
-            return Problem();
-        var userId = System.Convert.ToInt32(userClaimId);
-        return Ok(await userServices.GetUserAsync(userId));
-    }
-    
+        => Ok(await userServices.GetUserAsync(this.GetUserId()));
+
     [HttpDelete("me")]
     public async Task<IActionResult> DeleteMyUser() 
         => await userServices.DeleteUserAsync(this.GetUserId()) ? Ok("Success") : Problem();
