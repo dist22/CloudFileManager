@@ -35,7 +35,9 @@ public class FileController(IFileServices fileServices) : ControllerBase
     
     
     [HttpDelete("{fileId}")]
-    public async Task<IActionResult> DeleteMyFileController(int fileId) 
-        => await fileServices.DeleteUserFileAsync(this.GetUserId(), fileId) ?
-            Ok("Success") : NotFound();
+    public async Task<IActionResult> DeleteMyFileController(int fileId)
+    {
+        await fileServices.DeleteUserFileAsync(this.GetUserId(), fileId);
+        return Ok("File deleted");
+    }
 }
