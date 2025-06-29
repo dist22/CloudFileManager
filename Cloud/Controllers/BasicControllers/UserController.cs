@@ -19,7 +19,10 @@ public class UserController(IUserServices userServices) : ControllerBase
         => Ok(await userServices.GetUserAsync(this.GetUserId()));
 
     [HttpDelete("me")]
-    public async Task<IActionResult> DeleteMyUser() 
-        => await userServices.DeleteUserAsync(this.GetUserId()) ? Ok("Success") : Problem();
+    public async Task<IActionResult> DeleteMyUser()
+    {
+        await userServices.DeleteUserAsync(this.GetUserId());
+        return Ok("User deleted");
+    }
 
 }
