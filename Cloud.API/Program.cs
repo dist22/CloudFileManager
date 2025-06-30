@@ -1,18 +1,24 @@
 using System.Text;
 using Azure.Storage.Blobs;
-using Cloud.Data;
-using Cloud.Interfaces;
-using Cloud.Repository;
-using Cloud.Configuration;
-using Cloud.FileSizeConverter;
-using Cloud.Interfaces.BlobStorage;
-using Cloud.Interfaces.FileSizeConverter;
-using Cloud.Interfaces.PasswordHasher;
-using Cloud.Interfaces.Repositories;
-using Cloud.Interfaces.Services;
-using Cloud.Jwt;
-using Cloud.JwtProvider;
-using Cloud.Services;
+using Cloud.Application.ApplicationProfile;
+using Cloud.Application.Interfaces.Services;
+using Cloud.Application.Services;
+
+using Cloud.Domain.Interfaces.BlobStorage;
+using Cloud.Domain.Interfaces.FileSizeConverter;
+using Cloud.Domain.Interfaces.JwtProvider;
+using Cloud.Domain.Interfaces.Repositories;
+using Cloud.Domain.Interfaces.PasswordHasher;
+
+using Cloud.Infrastructure.AzureBlobStorage;
+using Cloud.Infrastructure.AzureBlobStorage.Options;
+using Cloud.Infrastructure.Data.Context;
+using Cloud.Infrastructure.FileSizeConverter;
+using Cloud.Infrastructure.Jwt;
+using Cloud.Infrastructure.Jwt.Options;
+using Cloud.Infrastructure.Repository;
+using Cloud.Infrastructure.PasswordHasher;
+
 using Cloud.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

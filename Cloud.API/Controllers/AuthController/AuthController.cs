@@ -1,6 +1,5 @@
-﻿using Cloud.DTOs;
-using Cloud.DTOs.User;
-using Cloud.Interfaces.Services;
+﻿using Cloud.Application.DTOs.User;
+using Cloud.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,12 +1,10 @@
-﻿using Cloud.DTOs;
-using Cloud.DTOs.File;
-using Cloud.Interfaces;
+﻿using Cloud.Application.DTOs.File;
+using Cloud.Application.Interfaces.Services;
 using Cloud.Extensions;
-using Cloud.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cloud.Controllers;
+namespace Cloud.Controllers.BasicControllers;
 
 [ApiController]
 [Authorize(Roles = "Admin, User")]

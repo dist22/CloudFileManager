@@ -1,9 +1,7 @@
 ﻿using System.Security.Claims;
-using Cloud.Interfaces;
+using Cloud.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
-using Cloud.DTOs;
 using Cloud.Extensions;
-using Cloud.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cloud.Controllers.BasicControllers;

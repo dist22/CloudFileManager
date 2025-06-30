@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Cloud.Application.DTOs.File;
+using Cloud.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Cloud.DTOs.File;
-using Cloud.Interfaces.Services;
 
 namespace Cloud.Controllers.AdminControllers;
 
