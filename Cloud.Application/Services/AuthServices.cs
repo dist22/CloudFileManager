@@ -28,7 +28,7 @@ public class AuthServices : BaseServices, IAuthServices
     }
 
 
-    public async Task<bool> RegisteredAsync(UserCreateDTO userCreateDto)
+    public async Task RegisteredAsync(UserCreateDTO userCreateDto)
     {
         if (!await IfExistAsync(userCreateDto.email, userCreateDto.username))
         {
