@@ -12,7 +12,10 @@ public class AuthController(IAuthServices authServices) : ControllerBase
 {
     [HttpPost("reg")]
     public async Task<IActionResult> RegUserController([FromForm] UserCreateDTO userCreateDto)
-        => await authServices.RegisteredAsync(userCreateDto) ? Ok("Successful") : Conflict();
+    {
+        await authServices.RegisteredAsync(userCreateDto);
+        return Ok("User created");
+    }
 
     [HttpPost("log")]
     public async Task<IActionResult> LoginController([FromForm] UserLoginDTO userLoginDto)
