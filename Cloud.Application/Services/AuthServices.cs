@@ -37,7 +37,8 @@ public class AuthServices : BaseServices, IAuthServices
                 var user = await _userRepository.AddAsync(_mapper.Map<User>(userCreateDto));
                 user.containerName = await _blobStorage.CreateUserContainerAsync(user.userId.ToString());
                 user.password = _passwordHasher.Generate(userCreateDto.password);
-                return await _userRepository.Update(user);
+                if (!await _userRepository.Update(user))
+                    throw new ConflictException("Coudn`t registered user");
             }
 
             throw new Exception("Password don`t match");
