@@ -3,13 +3,11 @@ using Azure.Storage.Blobs;
 using Cloud.Application.ApplicationProfile;
 using Cloud.Application.Interfaces.Services;
 using Cloud.Application.Services;
-
 using Cloud.Domain.Interfaces.BlobStorage;
 using Cloud.Domain.Interfaces.FileSizeConverter;
 using Cloud.Domain.Interfaces.JwtProvider;
 using Cloud.Domain.Interfaces.Repositories;
 using Cloud.Domain.Interfaces.PasswordHasher;
-
 using Cloud.Infrastructure.AzureBlobStorage;
 using Cloud.Infrastructure.AzureBlobStorage.Options;
 using Cloud.Infrastructure.Data.Context;
@@ -18,7 +16,7 @@ using Cloud.Infrastructure.Jwt;
 using Cloud.Infrastructure.Jwt.Options;
 using Cloud.Infrastructure.Repository;
 using Cloud.Infrastructure.PasswordHasher;
-
+using Cloud.Infrastructure.Data.Seeding;
 using Cloud.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -73,19 +71,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy =>
-    {
-        policy.RequireRole("Admin");
-    });
-    
-    options.AddPolicy("User", policy =>
-    {
-        policy.RequireRole("User");
-    });
-    
+    options.AddPolicy("Admin", policy => { policy.RequireRole("Admin"); });
+
+    options.AddPolicy("User", policy => { policy.RequireRole("User"); });
 });
 
-builder.Services.AddDbContext<DataContextEF>(options =>{
+builder.Services.AddDbContext<DataContextEF>(options =>
+{
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
 });
 
@@ -95,7 +87,6 @@ builder.Services.AddSingleton(sp =>
     var options = sp.GetRequiredService<IOptions<AzureStorageOptions>>().Value;
     return new BlobServiceClient(options.ConnectionString);
 });
-
 
 
 builder.Services.AddScoped<IBlobStorage, BlobStorage>();
@@ -112,15 +103,9 @@ builder.Services.AddAutoMapper(typeof(ApplicationProfile));
 var app = builder.Build();
 
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-else
-{
-    app.UseHttpsRedirection();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -137,4 +122,3 @@ using (var scope = app.Services.CreateScope())
 await DbInitializer.SeedAdminAsync(app.Services);
 
 app.Run();
-

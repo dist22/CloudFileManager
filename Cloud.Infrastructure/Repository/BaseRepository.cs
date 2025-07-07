@@ -6,58 +6,52 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cloud.Infrastructure.Repository;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class
+public class BaseRepository<T>(DataContextEF entity) : IBaseRepository<T>
+    where T : class
 {
-    private readonly DataContextEF _entity;
-    protected readonly DbSet<T> dbSet;
-
-    public BaseRepository(DataContextEF entity)
-    {
-        _entity = entity;
-        dbSet = entity.Set<T>();
-    }
+    private readonly DbSet<T> _dbSet = entity.Set<T>();
 
     public async Task<bool> IfExistAsync(Expression<Func<T, bool>> expression)
     {
-        return await dbSet
+        return await _dbSet
             .AsNoTracking()
             .AnyAsync(expression);
     }
 
-    public async Task<bool> SaveChangesAsync()
+    private async Task<bool> SaveChangesAsync()
     {
-        return await _entity.SaveChangesAsync() > 0;
+        return await entity.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> Update(T @object)
     {
-        dbSet.Update(@object);
+        _dbSet.Update(@object);
         return await SaveChangesAsync();
     }
 
     public async Task<bool> Remove(T @object)
     {
-        dbSet.Remove(@object);
+        _dbSet.Remove(@object);
         return await SaveChangesAsync();
     }
 
     public async Task<T?> GetAsync(Expression<Func<T, bool>> expression)
     {
-        return await dbSet
+        return await _dbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(expression);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await dbSet
+        return await _dbSet
             .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task<T?> AddAsync(T @object)
     {
-        var result = dbSet.Add(@object);
+        var result = _dbSet.Add(@object);
         return await SaveChangesAsync() ? result.Entity : null;
     }
 }

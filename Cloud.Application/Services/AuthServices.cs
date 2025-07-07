@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cloud.Application.DTOs.User;
 using Cloud.Application.Interfaces.Services;
+using Cloud.Domain.Exceptions;
 using Cloud.Domain.Interfaces.BlobStorage;
 using Cloud.Domain.Interfaces.JwtProvider;
 using Cloud.Domain.Interfaces.PasswordHasher;
@@ -40,11 +41,9 @@ public class AuthServices : BaseServices, IAuthServices
                 if (!await _userRepository.Update(user))
                     throw new ConflictException("Coudn`t registered user");
             }
-
-            throw new Exception("Password don`t match");
+            throw new ConflictException("Password don`t match");
         }
-
-        throw new Exception("User already exists");
+        throw new ConflictException("User already exists");
     }
 
     public async Task<string> LoginAsync(UserLoginDTO userLoginDto)
@@ -52,7 +51,7 @@ public class AuthServices : BaseServices, IAuthServices
         var user = await GetIfNotNullAsync(_userRepository.GetAsync(u => u.email == userLoginDto.email));
         if (_passwordHasher.Verify(userLoginDto.password, user.password))
             return _jwtProvider.CreateToken(user);
-        throw new Exception("error");
+        throw new ConflictException("Uncorect password");
     }
 
     private Task<bool> PasswordConfirmAsync(string password, string passwordConfirm)

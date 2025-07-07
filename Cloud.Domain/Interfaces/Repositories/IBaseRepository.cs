@@ -15,7 +15,5 @@ public interface IBaseRepository<T> where T : class
     public Task<T?> AddAsync(T @object);
 
     public Task<bool> IfExistAsync(Expression<Func<T, bool>> expression);
-
-    protected Task<bool> SaveChangesAsync();
     
 }
